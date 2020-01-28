@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import assignment.*;
 
-class TestPrettyTest {
+class PrettyPrintVisitorTest {
 
     private assignmentParser.StartContext GetStartContext(String source) {
         CharStream cs = CharStreams.fromString(source);
