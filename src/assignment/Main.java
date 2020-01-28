@@ -11,8 +11,8 @@ public class Main {
 
     public static void main(String[] args) {
 //        main_manual(args);
-//        main_automated_pretty(args);
-        main_automated_polish(args);
+        main_automated_pretty(args);
+//        main_automated_polish(args);
     }
 
     public static void main_manual(String[] args) {
@@ -31,7 +31,8 @@ public class Main {
 
     public static void main_automated_polish(String[] args) {
 //        CharStream cs = CharStreams.fromString("bc=(1+2+3*(2*2))*3");
-        CharStream cs = CharStreams.fromString("1-2/3*a;");
+//        CharStream cs = CharStreams.fromString("1-2/3*54;");
+        CharStream cs = CharStreams.fromString("12+19/(3+1);");
         assignmentLexer lexer = new assignmentLexer(cs);
         assignmentParser parser = new assignmentParser(new CommonTokenStream(lexer));
         Stack<String> results = new ReversePolishVisitor().visit(parser.start());
@@ -53,7 +54,14 @@ public class Main {
     }
 
     public static void main_automated_pretty(String[] args) {
-        String input = "hello_world = 1 + 3 **     5\n/2.2323+5.2; my_name_is=\"lewis\";";
+//        String input = "hello_world = 1 + 3 **     5\n/2.2323+5.2; my_name_is=\"lewis\";";
+        String input = "name=\n" +
+                "\"Lewis\";\n" +
+                "            age=\n" +
+                "            22;\n" +
+                "message=\n" +
+                "                    \"Hello my name is \" + name + \" and I am \" + age + \" years old!\";";
+//        String input = "-3.14159+2*-4-5";
         System.out.println(String.format("Input:\n%s\n", input));
         CharStream cs = CharStreams.fromString(input);
         assignmentLexer lexer = new assignmentLexer(cs);

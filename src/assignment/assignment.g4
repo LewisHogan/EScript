@@ -11,10 +11,10 @@ expression:
             left=expression op=POW right=expression
             | left=expression op=(MUL|DIV) right=expression
             | left=expression op=(ADD|SUB) right=expression
-            | VARIABLE op=SET right=expression
             | SUB? (NUMBER|VARIABLE)
             | VARIABLE
             | STRING
+            | VARIABLE op=SET right=expression
             | '(' expression ')';
 
 //-3.14159+2*-4-5

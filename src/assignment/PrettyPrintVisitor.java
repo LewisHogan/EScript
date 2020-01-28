@@ -1,5 +1,6 @@
 package assignment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
@@ -10,6 +11,7 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
             String left;
             String op;
             String right;
+
             // We have one of the operations, such as POW, MUL, ADD, or SET
             // This also means we have an expression in the right variable, and also the left IF we don't have SET
             // If SET is null, then we have one of the math operations
@@ -41,9 +43,9 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
     public String visitStatement(assignmentParser.StatementContext ctx) {
         if (ctx.expression() != null) {
             return visitExpression(ctx.expression());
+        } else {
+            return "";
         }
-
-        return super.visitStatement(ctx);
     }
 
     @Override
@@ -51,12 +53,13 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
         List<assignmentParser.StatementContext> statements = ctx.statement();
         if (statements == null) return super.visitStart(ctx);
 
-        String lines = "";
-        for (int i = 0; i < statements.size(); i++) {
-            String line = visitStatement(statements.get(i)) + "\n";
-            lines += line;
-        }
+        List<String> lines = new ArrayList<>();
 
-        return lines;
+        for (assignmentParser.StatementContext statementContext : statements)
+            lines.add(visitStatement(statementContext));
+
+        lines.removeIf((s) -> s.equals(""));
+
+        return String.join("\n", lines);
     }
 }

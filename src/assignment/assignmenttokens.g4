@@ -16,7 +16,7 @@ NUMBER: INTEGER | FLOAT;
 FLOAT: INTEGER '.' INTEGER;
 INTEGER: [0-9]+;
 
-STRING: '"' .* '"';
+STRING: '"' .*? '"';
 
 // A variable must start with a letter (or the _ character)
 // and can then be followed by any combination of characters in the english alphabet
@@ -24,3 +24,8 @@ STRING: '"' .* '"';
 VARIABLE: ([a-z]|[A-Z]|'_')+ ([a-z]|[A-Z]|[0-9]|'_')*;
 
 WS: [ \t\r\n] -> skip;
+
+// Handles no input correctly -> returns nothing
+// Handles malformed input correctly -> generates error
+// Moves each statement onto a new line
+// Puts exactly one space between each word/token
