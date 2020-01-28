@@ -9,7 +9,8 @@ statement: expression SEP | SEP;
 
 expression:
             left=expression op=POW right=expression
-            | left=expression op=(MUL|DIV) right=expression
+            | op=SQRT right=expression
+            | left=expression op=(MUL|DIV|MOD) right=expression
             | left=expression op=(ADD|SUB) right=expression
             | SUB? (NUMBER|VARIABLE)
             | VARIABLE

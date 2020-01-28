@@ -16,6 +16,7 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
             // This also means we have an expression in the right variable, and also the left IF we don't have SET
             // If SET is null, then we have one of the math operations
             if (ctx.SET() != null) left = ctx.VARIABLE().getText();
+            else if (ctx.SET() != null) left = ctx.VARIABLE().getText();
             else left = visitExpression(ctx.left);
 
             right = visitExpression(ctx.right);

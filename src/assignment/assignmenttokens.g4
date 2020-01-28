@@ -1,7 +1,9 @@
 grammar assignmenttokens;
 
-// Order of Operations: (POW, MUL/DIV, ADD/SUB)
+// Order of Operations: (POW, SQRT, MUL/DIV/MOD, ADD/SUB)
 POW: '**';
+SQRT: '//';
+MOD: '%';
 MUL: '*';
 DIV: '/';
 ADD: '+';
@@ -29,3 +31,5 @@ WS: [ \t\r\n] -> skip;
 // Handles malformed input correctly -> generates error
 // Moves each statement onto a new line
 // Puts exactly one space between each word/token
+
+//2**-1

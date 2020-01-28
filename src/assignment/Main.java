@@ -11,8 +11,8 @@ public class Main {
 
     public static void main(String[] args) {
 //        main_manual(args);
-        main_automated_pretty(args);
-//        main_automated_polish(args);
+//        main_automated_pretty(args);
+        main_automated_polish(args);
     }
 
     public static void main_manual(String[] args) {
@@ -32,7 +32,7 @@ public class Main {
     public static void main_automated_polish(String[] args) {
 //        CharStream cs = CharStreams.fromString("bc=(1+2+3*(2*2))*3");
 //        CharStream cs = CharStreams.fromString("1-2/3*54;");
-        CharStream cs = CharStreams.fromString("12+19/(3+1);");
+        CharStream cs = CharStreams.fromString("12%7;");
         assignmentLexer lexer = new assignmentLexer(cs);
         assignmentParser parser = new assignmentParser(new CommonTokenStream(lexer));
         Stack<String> results = new ReversePolishVisitor().visit(parser.start());

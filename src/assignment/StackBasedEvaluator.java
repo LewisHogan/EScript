@@ -16,6 +16,15 @@ public class StackBasedEvaluator {
                     n1 = stack.pop();
                     stack.push(Math.pow(n1, n2));
                     break;
+                case "%":
+                    n2 = stack.pop();
+                    n1 = stack.pop();
+                    stack.push(n1 % n2);
+                    break;
+                case "//":
+                    n1 = stack.pop();
+                    stack.push(Math.sqrt(n1));
+                    break;
                 case "*":
                     n2 = stack.pop();
                     n1 = stack.pop();

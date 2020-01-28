@@ -18,7 +18,7 @@ public class ReversePolishVisitor extends assignmentBaseVisitor<Stack<String>> {
             // This also means we have an expression in the right variable, and also the left IF we don't have SET
             // If SET is null, then we have one of the math operations
             if (ctx.SET() != null) stack.push(ctx.VARIABLE().getText());
-            else addElements(stack, visitExpression(ctx.left));
+            else if (ctx.SQRT() == null) addElements(stack, visitExpression(ctx.left));
 
             addElements(stack, visitExpression(ctx.right));
             stack.push(ctx.op.getText());
