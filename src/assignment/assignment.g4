@@ -2,7 +2,7 @@ grammar assignment;
 
 import assignmenttokens;
 
-start: expression;
+start: statement+;
 
 // A statement is basically an "action", code is a group of statements
 statement: expression SEP | SEP;

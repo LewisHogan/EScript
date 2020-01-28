@@ -1,5 +1,7 @@
 package assignment;
 
+import java.util.List;
+
 public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
     @Override
     public String visitExpression(assignmentParser.ExpressionContext ctx) {
@@ -25,11 +27,36 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
                 return ctx.NUMBER().getText();
             } else if (ctx.VARIABLE() != null) {
                 return ctx.VARIABLE().getText();
+            } else if (ctx.STRING() != null) {
+                return ctx.STRING().getText();
             } else if (ctx.expression().size() != 0) {
                 return '(' + visitExpression(ctx.expression(0)) + ')';
             }
 
             return "";
         }
+    }
+
+    @Override
+    public String visitStatement(assignmentParser.StatementContext ctx) {
+        if (ctx.expression() != null) {
+            return visitExpression(ctx.expression());
+        }
+
+        return super.visitStatement(ctx);
+    }
+
+    @Override
+    public String visitStart(assignmentParser.StartContext ctx) {
+        List<assignmentParser.StatementContext> statements = ctx.statement();
+        if (statements == null) return super.visitStart(ctx);
+
+        String lines = "";
+        for (int i = 0; i < statements.size(); i++) {
+            String line = visitStatement(statements.get(i)) + "\n";
+            lines += line;
+        }
+
+        return lines;
     }
 }

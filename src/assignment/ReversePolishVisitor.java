@@ -38,4 +38,13 @@ public class ReversePolishVisitor extends assignmentBaseVisitor<Stack<String>> {
             return stack;
         }
     }
+
+    @Override
+    public Stack<String> visitStatement(assignmentParser.StatementContext ctx) {
+        if (ctx.expression() != null) {
+            return visitExpression(ctx.expression());
+        }
+
+        return super.visitStatement(ctx);
+    }
 }

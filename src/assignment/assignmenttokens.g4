@@ -18,8 +18,9 @@ INTEGER: [0-9]+;
 
 STRING: '"' .* '"';
 
-// A variable must start with a letter and can then be followed by any combination of characters in the english alphabet
-// or digits
+// A variable must start with a letter (or the _ character)
+// and can then be followed by any combination of characters in the english alphabet
+// or digits (or the _ character)
 VARIABLE: ([a-z]|[A-Z]|'_')+ ([a-z]|[A-Z]|[0-9]|'_')*;
 
 WS: [ \t\r\n] -> skip;
