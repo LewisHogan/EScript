@@ -29,6 +29,7 @@ class PrettyPrintVisitorTest {
 
     @Test
     public void TestMalformedInput() {
+        // TODO: FIX this test as I'm not even sure if this is the correct output
         String input = ";;;;awdawdaw;d;;";
         String output = new PrettyPrintVisitor().visit(GetStartContext(input));
         Assertions.assertEquals("awdawdaw\nd", output);
@@ -36,6 +37,7 @@ class PrettyPrintVisitorTest {
 
     @Test
     public void TestNewLine() {
+        // TODO: REPLACE THIS TEST WITH ONE I KNOW IS CORRECT
         String input = "n1=10; n2=20; n3=30; name=\"Lewis\"; university=\"essex\";\n" +
                 "simba=\"remember\n" +
                 "who\n" +
