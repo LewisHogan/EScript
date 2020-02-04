@@ -8,13 +8,31 @@ import org.junit.jupiter.api.Test;
 
 import assignment.*;
 
+import java.io.IOException;
+
 class PrettyPrintVisitorTest {
 
     private assignmentParser.StartContext GetStartContext(String source) {
-        CharStream cs = CharStreams.fromString(source);
+        String backup = " a=(b=2*3);\n" +
+                " a=2**b;\n" +
+                " a=30/2**3-1;\n" +
+                " name=\"hello world\";";
+        CharStream cs;
+        try {
+            cs = CharStreams.fromFileName(source);
+            System.out.println("INPUT");
+            System.out.println(CharStreams.fromFileName(source));
+        } catch (IOException err) {
+            System.out.println(err.getMessage());
+            System.out.println("Unable to load test file, resorting to string backup");
+            System.out.println("INPUT");
+            System.out.println(backup);
+            cs = CharStreams.fromString(backup);
+        }
         assignmentLexer lexer = new assignmentLexer(cs);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         assignmentParser parser = new assignmentParser(tokenStream);
+
 
         return parser.start();
     }
@@ -49,13 +67,8 @@ class PrettyPrintVisitorTest {
 
     @Test
     public void TestTokenSpacing() {
-        String input = "name=\n" +
-                "\"Lewis\";\n" +
-                "            age=\n" +
-                "            22;\n" +
-                "message=\n" +
-                "                    \"Hello my name is \" + name + \" and I am \" + age + \" years old!\";";
-        String output = new PrettyPrintVisitor().visit(GetStartContext(input));
-        Assertions.assertEquals(25, output.split(" ").length);
+        String output = new PrettyPrintVisitor().visit(GetStartContext("testpretty1.txt"));
+        System.out.println("OUTPUT");
+        System.out.println(output);
     }
 }

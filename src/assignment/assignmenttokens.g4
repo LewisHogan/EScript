@@ -18,8 +18,12 @@ LT: '<';
 GTE: '>=';
 LTE: '<=';
 EQUALS: '==';
-NOTEQUALS: '==';
+NOTEQUALS: '!=';
 NOT: '!';
+
+IF: 'if';
+ELSEIF: 'else if';
+ELSE: 'else';
 
 STATEMENTSEP: ';';
 

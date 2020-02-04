@@ -11,37 +11,37 @@ start: statement+;
 // there are also optional statement blocks for the any alternate conditions are true
 // and if none of the conditions are true
 // there is also a return expression statement
-statement: '{' statement* '}'
-            | ID '=' (expression | condition) STATEMENTSEP
-            | 'if' condition statement ('else if' condition statement)* ('else' statement)?
-            | 'return' expression STATEMENTSEP;
+statement: '{' statement* '}' #StatementBlock
+            | ID '=' (expression | condition) STATEMENTSEP #StatementAssignment
+            | IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementCondition
+            | 'return' expression STATEMENTSEP #StatementReturn;
 
 // An condition is a collection of expression's that must be evaluated according to the logical operands
-condition: '(' condition ')' #BCondition
-           | expression #ExpressionCondition
-           | NOT condition #NotCondition
-           | condition EQUALS condition #EqualsCondition
-           | condition NOTEQUALS condition #NotEqualsCondition
-           | condition (GT | LT) condition #GTLTCondition
-           | condition (GTE | LTE) condition #GTELTECondition
-           | condition OR condition #OrCondition
-           | condition AND condition #AndCondition;
+condition: '(' condition ')' #ConditionBrackets
+           | expression #ConditionExpression
+           | NOT condition #ConditionNot
+           | left=condition op=EQUALS right=condition #ConditionOP
+           | left=condition op=NOTEQUALS right=condition #ConditionOP
+           | left=condition op=(GT | LT) right=condition #ConditionOP
+           | left=condition op=(GTE | LTE) right=condition #ConditionOP
+           | left=condition op=OR right=condition #ConditionOP
+           | left=condition op=AND right=condition #ConditionOP;
 // An expression is a collection of mathmetical operations
 // in addition to variable identifiers and assignments
 // unlike in statement, a variable being assigned does not require a seperator
 // nor does it take a condition (that is resolved by the statement tree)
-expression: expression (POW) expression #Pow
-            | (SQRT) expression #Sqrt
-            | expression op=(MUL | DIV | MOD) expression #MulOrDivOrMod
-            | expression (ADD | SUB) expression #AddOrSub
-            | SUB? (ID | NUMBER) #Value
-            | '(' (expression | condition) ')' #BExpression
-            | ID '=' (expression) #Assignment
-            | SUB? VALUE #Value;
+expression: left=expression op=POW right=expression #ExpressionOP
+            | (SQRT) expression #ExpressionSQRT
+            | left=expression op=(MUL | DIV | MOD) right=expression #ExpressionOP
+            | left=expression op=(ADD | SUB) right=expression #ExpressionOP
+            | SUB? val=(ID | NUMBER) #ExpressionValue
+            | '(' (expression | condition) ')' #ExpressionBrackets
+            | ID '=' (expression) #ExpressionAssignment
+            | SUB? val=VALUE #ExpressionValue;
 
 // example code I want to work
-// a=(b=2*3)
-// a=2**b
-// a=3.0/2**3-1
-// name="hello world"
+// a=(b=2*3);
+// a=2**b;
+// a=3.0/2**3-1;
+// name="hello world";
 
