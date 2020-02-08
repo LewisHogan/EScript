@@ -31,7 +31,6 @@ STATEMENTSEP: ';';
 // and can then be followed by any combination of characters in the english alphabet
 // or digits (or the _ character)
 ID: ([a-z]|[A-Z]|'_')+ ([a-z]|[A-Z]|[0-9]|'_')*;
-VALUE: ID | NUMBER | STRING;
 
 NUMBER: FLOAT | INTEGER;
 FLOAT: INTEGER '.' INTEGER;

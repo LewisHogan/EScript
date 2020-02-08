@@ -14,6 +14,7 @@ start: statement+;
 statement: '{' statement* '}' #StatementBlock
             | ID '=' (expression | condition) STATEMENTSEP #StatementAssignment
             | IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementCondition
+            | condition STATEMENTSEP #StatementConditionWithoutBranch
             | 'return' expression STATEMENTSEP #StatementReturn;
 
 // An condition is a collection of expression's that must be evaluated according to the logical operands
@@ -37,7 +38,7 @@ expression: left=expression op=POW right=expression #ExpressionOP
             | SUB? val=(ID | NUMBER) #ExpressionValue
             | '(' (expression | condition) ')' #ExpressionBrackets
             | ID '=' (expression) #ExpressionAssignment
-            | SUB? val=VALUE #ExpressionValue;
+            | val=STRING #ExpressionValue;
 
 // example code I want to work
 // a=(b=2*3);
