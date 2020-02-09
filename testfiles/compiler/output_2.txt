@@ -1,0 +1,20 @@
+name = "output_2.txt"
+year = 2020
+if (name == "output_2.txt") and year > 2019:
+	goal = "implement functional calls"
+elif year > 2000:
+	goal = "go to school"
+else:
+	goal = "become"
+if 3 > 2 or 4 > 6:
+	if 2 % 3 == 2:
+		finish_the_program = True
+	else:
+		finish_the_program = False
+if a and b:
+	if c or d:
+		msg = "done"
+	else:
+		msg = "not yet"
+elif !c and e:
+	msg = "i have run out of ideas"

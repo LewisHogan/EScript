@@ -1,0 +1,16 @@
+name = "output_2.txt";
+year = 2020;
+if (name == "output_2.txt") && year > 2019 goal = "implement functional calls";
+else if year > 2000	goal = "go to school";
+else goal = "become";
+if 3 > 2 || 4 > 6 {
+	if 2 % 3 == 2 finish_the_program = true;
+	else finish_the_program = false;
+}
+
+if a && b
+	if c || d msg = "done";
+	else
+		msg = "not yet";
+else if !c && e
+	msg = "i have run out of ideas";

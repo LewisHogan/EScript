@@ -6,7 +6,7 @@ else if (x == 11) {
 }
 else if (a > 3) a = 3;
 else if (a == b) {
-	true = false;
+	gaming = true;
 	why_am_i_like_this = lewis;
 }
 output = "you failed";

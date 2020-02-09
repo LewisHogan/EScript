@@ -22,8 +22,18 @@ public class PrettyPrintVisitor extends assignmentBaseVisitor<String> {
     }
 
     @Override
+    public String visitConditionExpressionOP(assignmentParser.ConditionExpressionOPContext ctx) {
+        return String.format("%s %s %s", visit(ctx.left), ctx.op.getText(), visit(ctx.right));
+    }
+
+    @Override
     public String visitConditionBrackets(assignmentParser.ConditionBracketsContext ctx) {
         return String.format("(%s)", visit(ctx.condition()));
+    }
+
+    @Override
+    public String visitConditionValue(assignmentParser.ConditionValueContext ctx) {
+        return ctx.value.getText();
     }
 
     @Override

@@ -11,7 +11,7 @@ start: statement+;
 // there are also optional statement blocks for the any alternate conditions are true
 // and if none of the conditions are true
 // there is also a return expression statement
-statement: '{' statement* '}' #StatementBlock
+statement: LBRACE statement* RBRACE #StatementBlock
             | ID '=' (expression | condition) STATEMENTSEP #StatementAssignment
             | IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementCondition
             | condition STATEMENTSEP #StatementConditionWithoutBranch
@@ -19,12 +19,13 @@ statement: '{' statement* '}' #StatementBlock
 
 // An condition is a collection of expression's that must be evaluated according to the logical operands
 condition: '(' condition ')' #ConditionBrackets
+           | value=(TRUE|FALSE) #ConditionValue
            | expression #ConditionExpression
            | NOT condition #ConditionNot
            | left=condition op=EQUALS right=condition #ConditionOP
            | left=condition op=NOTEQUALS right=condition #ConditionOP
-           | left=condition op=(GT | LT) right=condition #ConditionOP
-           | left=condition op=(GTE | LTE) right=condition #ConditionOP
+           | left=expression op=(GT | LT) right=expression #ConditionExpressionOP
+           | left=expression op=(GTE | LTE) right=expression #ConditionExpressionOP
            | left=condition op=OR right=condition #ConditionOP
            | left=condition op=AND right=condition #ConditionOP;
 // An expression is a collection of mathmetical operations

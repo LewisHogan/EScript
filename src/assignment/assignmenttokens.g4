@@ -21,11 +21,16 @@ EQUALS: '==';
 NOTEQUALS: '!=';
 NOT: '!';
 
+TRUE: 'true';
+FALSE: 'false';
 IF: 'if';
 ELSEIF: 'else if';
 ELSE: 'else';
 
 STATEMENTSEP: ';';
+
+LBRACE : '{' ;
+RBRACE : '}' ;
 
 // An ID must start with a letter (or the _ character)
 // and can then be followed by any combination of characters in the english alphabet

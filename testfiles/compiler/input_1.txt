@@ -1,0 +1,10 @@
+name="Lewis";
+age=22;
+if age > 18 {
+is_allowed_to_drink = true;
+} else if (name != "john") {
+	if (age < 20)
+		is_allowed_to_eat = false; else is_allowed_to_eat=true;
+} else {
+	name = "happy";
+}
