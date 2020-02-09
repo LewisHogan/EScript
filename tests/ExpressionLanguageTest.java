@@ -64,7 +64,7 @@ class ExpressionLanguageTest {
      */
     @Test
     public void TestCompiler() {
-        for (int i = 2; i < 3; i++) {
+        for (int i = 1; i < 3; i++) {
             String check = String.format("Checking \"testfiles/compiler/output_%d\".txt matches expected output...", i);
             System.out.print(check);
 
@@ -77,8 +77,6 @@ class ExpressionLanguageTest {
                 assignmentParser parser = new assignmentParser(tokenStream);
                 String output = new PythonCompilerVisitor().visit(parser.start());
 
-                System.out.println("OUTPUT");
-                System.out.println(output);
                 Assertions.assertEquals(correctlyCompiled, output);
                 System.out.println("PASSED");
 
