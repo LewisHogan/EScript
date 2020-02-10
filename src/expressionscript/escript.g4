@@ -32,7 +32,7 @@ expression
     : left=expression op=POW right=expression #ExpressionMath
     | left=expression op=(MUL|DIV|MOD) right=expression #ExpressionMath
     | left=expression op=(ADD|SUB) right=expression #ExpressionMath
-    | SUB? val=ID #ExpressionValue //TODO: Should also be able to take a NUMBER here
+    | SUB? val=(ID|NUMBER) #ExpressionValue //TODO: Should also be able to take a NUMBER here
     | LPAREN (expression|condition) RPAREN #ExpressionParens
     | ID SET expression #ExpressionAssignment // This one is needed so we can nest assignments inside expressions
     | val=STRING #ExpressionValue; // This needs to go last otherwise it gets in the way of other rules
