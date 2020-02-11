@@ -25,6 +25,8 @@ condition
     | left=expression op=(GT|GTE|LT|LTE) right=expression #ConditionComparison
     | left=condition op=(AND|OR) right=condition #ConditionLogic;
 
+array: '[' expression (',' expression)* ']';
+
 // An expression is a unit of evaluation
 // common examples of expressions would be things like 3 + 2 or 2**4
 // expressions can be composed of sub expressions

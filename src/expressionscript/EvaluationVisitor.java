@@ -51,7 +51,7 @@ public class EvaluationVisitor extends escriptBaseVisitor {
 
     @Override
     public Object visitStatementAssignment(escriptParser.StatementAssignmentContext ctx) {
-        Object result = visit(ctx.expression());
+        Object result = ctx.expression() != null ? visit(ctx.expression()) : visit(ctx.condition());
         setVariableInScope(ctx.ID().getText(), result);
         return result;
     }
