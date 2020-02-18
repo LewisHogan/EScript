@@ -1,8 +1,0 @@
-name="Lewis Hogan";
-age=22;
-if (age > 18) {
-is_child=false;
-} else if (age > 30) {
-    is_fuill_grown = true;} else {
-	is_baby = !false;
-}

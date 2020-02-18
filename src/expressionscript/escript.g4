@@ -10,6 +10,8 @@ statement
     : LBRACE statement* RBRACE #StatementBlock
     | ID SET (expression | condition) EOS #StatementAssignment
     | IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementBranch
+    | WHILE condition statement #StatementWhile
+    | FOR LPAREN expression EOS condition EOS expression RPAREN statement #StatementFor
     | condition EOS #StatementCondition // TODO: Double check if I ever actually want to use this
     | RETURN expression EOS #StatementReturn; // TODO: Decide if this goes in expression script or not
 
@@ -25,7 +27,7 @@ condition
     | left=expression op=(GT|GTE|LT|LTE) right=expression #ConditionComparison
     | left=condition op=(AND|OR) right=condition #ConditionLogic;
 
-array: '[' expression (',' expression)* ']';
+array: '[' expression (SEP expression)* ']';
 
 // An expression is a unit of evaluation
 // common examples of expressions would be things like 3 + 2 or 2**4
@@ -35,7 +37,8 @@ expression
     | left=expression op=(MUL|DIV|MOD) right=expression #ExpressionMath
     | left=expression op=(ADD|SUB) right=expression #ExpressionMath
     | SUB? val=(ID|NUMBER) #ExpressionValue //TODO: Should also be able to take a NUMBER here
-    | LPAREN (expression|condition) RPAREN #ExpressionParens
+    | SUB? LPAREN (expression|condition) RPAREN #ExpressionParens
     | ID SET expression #ExpressionAssignment // This one is needed so we can nest assignments inside expressions
+    | val=array #ExpressionArray // This needs to go last otherwise it gets in the way of other rules
     | val=STRING #ExpressionValue; // This needs to go last otherwise it gets in the way of other rules
     // TODO: Double check STRING needs to be made its on rule at the end

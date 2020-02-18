@@ -34,6 +34,7 @@ FUNCTION: 'function';
 RETURN: 'return';
 
 // Structure Tokens
+SEP: ',';
 EOS: ';';
 LBRACE: '{';
 RBRACE: '}';
