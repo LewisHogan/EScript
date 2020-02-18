@@ -33,7 +33,7 @@ public class TestProgram {
         String sourceCode = "a=3>2;if (a > 5) {mstg=2;} else if (b == c) {if (b == b) name=a;lARR=\"ha\";} else foo=true;";
 
         System.out.println("INPUT : " + sourceCode);
-        var assignmentStatement = createAST(sourceCode);
+        ASTNode assignmentStatement = createAST(sourceCode);
 //        System.out.println("OUTPUT: " + new PrettyPrintASTVisitor().visit(assignmentStatement));
 
 
