@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  * Builder for an Abstract Syntax Tree
  */
 public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
+
     @Override
     public ASTNode visitStart(escriptParser.StartContext ctx) {
         ASTNode root = new ASTNode(ctx.statement().stream().map(this::visit).collect(Collectors.toList()));
@@ -159,6 +160,12 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
                 break;
             case escriptParser.OR:
                 op = EComparisonOperator.OR;
+                break;
+            case escriptParser.EQUALS:
+                op = EComparisonOperator.EQUALS;
+                break;
+            case escriptParser.NOTEQUALS:
+                op = EComparisonOperator.NOT_EQUALS;
                 break;
         }
 

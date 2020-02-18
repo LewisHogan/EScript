@@ -1,0 +1,12 @@
+name = "lh16674";age = 22;
+    money = 22 * 1000 - 9250;
+is_bankrupt = money       <
+ 0;
+
+ if (is_bankrupt == True)
+    age = age + 50;
+    else if (100 > 50)
+        money = money * 10;
+        money = money + 1;
+  else
+    money = 9999;

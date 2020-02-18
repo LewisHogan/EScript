@@ -25,7 +25,7 @@ condition
     | NOT condition #ConditionInverted
     | left=expression op=(EQUALS|NOTEQUALS) right=expression #ConditionComparison
     | left=expression op=(GT|GTE|LT|LTE) right=expression #ConditionComparison
-    | left=condition op=(AND|OR) right=condition #ConditionLogic;
+    | left=condition op=(AND|OR|EQUALS|NOTEQUALS) right=condition #ConditionLogic;
 
 array: '[' expression (SEP expression)* ']';
 

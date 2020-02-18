@@ -8,4 +8,8 @@ public class IfNode extends ASTNode<ConditionNode> {
         setPayload(condition);
         addChild(action);
     }
+
+    public IfNode(BooleanNode condition, ASTNode action) {
+        addChild(action);
+    }
 }
