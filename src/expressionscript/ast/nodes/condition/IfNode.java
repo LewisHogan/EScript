@@ -1,15 +1,18 @@
 package expressionscript.ast.nodes.condition;
 
 import expressionscript.ast.nodes.ASTNode;
-import expressionscript.ast.nodes.expression.ExpressionNode;
+
+import java.util.List;
 
 public class IfNode extends ASTNode<ConditionNode> {
-    public IfNode(ConditionNode condition, ASTNode action) {
+    /**
+     * Node which represents the if part of an if statement.
+     *
+     * @param condition Condition node to evaluate.
+     * @param statements List of Statement nodes which would be evaluated if the condition proves to be true.
+     */
+    public IfNode(ConditionNode condition, List<ASTNode> statements) {
         setPayload(condition);
-        addChild(action);
-    }
-
-    public IfNode(BooleanNode condition, ASTNode action) {
-        addChild(action);
+        statements.forEach(this::addChild);
     }
 }

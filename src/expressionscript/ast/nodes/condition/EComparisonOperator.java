@@ -1,5 +1,8 @@
 package expressionscript.ast.nodes.condition;
 
+/**
+ * Enum to represent the various comparison operators that can be used for boolean logic.
+ */
 public enum EComparisonOperator {
     EQUALS("==", 3),
     NOT_EQUALS("!=", 3),
@@ -10,8 +13,8 @@ public enum EComparisonOperator {
     AND("&&", 1),
     OR("||", 1);
 
-    public String op;
-    public int priority;
+    private String op;
+    private int priority;
 
     EComparisonOperator(String s, int priority) {
         this.op = s;

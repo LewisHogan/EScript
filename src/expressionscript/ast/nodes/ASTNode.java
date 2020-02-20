@@ -10,16 +10,14 @@ public class ASTNode<E> implements Tree {
     private E value;
 
     private ASTNode parent;
-    private List<ASTNode> children;
+    private List<ASTNode> children = new ArrayList<>();
 
     public ASTNode() {
-        this.children = new ArrayList<>();
+
     }
 
     public ASTNode(List<ASTNode> children) {
-        this.children = children;
-//        if (children != null)
-//            children.forEach(c -> c.setParent(this));
+        children.forEach(this::addChild);
     }
 
     @Override

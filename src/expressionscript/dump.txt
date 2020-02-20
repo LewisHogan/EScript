@@ -10,3 +10,15 @@ is_bankrupt = money       <
         money = money + 1;
   else
     money = 9999;
+
+name="lewis";
+age = 2020 - 1997;
+money = age * 356;
+
+is_bankrupt = money > 0;
+
+if (is_bankrupt == true) msg = "Empty Account";
+else if (money > 100) {
+	msg = "£MAX";
+}
+else msg = "£" + money;
