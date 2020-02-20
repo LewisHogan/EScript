@@ -170,7 +170,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         String output = "";
         for (int i = 0; i < node.getChildCount(); i++) {
             ASTNode child = (ASTNode) node.getChild(i);
-            output += visit(node.getChild(i)) + ";";
+            output += visit(node.getChild(i)) + (node.getChild(i) instanceof WhileNode ? "" : ";");
             if (i != node.getChildCount() - 1) output += "\n";
         }
         return output;

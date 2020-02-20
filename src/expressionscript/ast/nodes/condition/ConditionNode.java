@@ -21,7 +21,7 @@ public class ConditionNode extends ASTNode<EComparisonOperator> {
     // Used for things like if is_bankrupt, rather than is_bankrupt == true
     public ConditionNode(ASTNode value) {
         addChild(value);
-        setPayload(EComparisonOperator.EQUALS);
+        setPayload(EComparisonOperator.VALUE);
     }
 
     @Override

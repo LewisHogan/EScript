@@ -11,7 +11,8 @@ public enum EComparisonOperator {
     LESS_THEN("<", 2),
     LESS_THEN_OR_EQUALS("<=", 2),
     AND("&&", 1),
-    OR("||", 1);
+    OR("||", 1),
+    VALUE("", 0);
 
     private String op;
     private int priority;
