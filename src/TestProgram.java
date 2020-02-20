@@ -26,25 +26,36 @@ import java.util.Arrays;
 
 public class TestProgram {
 
-    private static ASTNode createAST(String source) {
+    private static escriptParser createParser(String source) {
         CharStream sourceCharStream = CharStreams.fromString(source);
         escriptLexer lexer = new escriptLexer(sourceCharStream);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
         escriptParser parser = new escriptParser(commonTokenStream);
+        return parser;
+    }
 
-        ASTBuilder builder = new ASTBuilder();
-        Tree concreteTree = parser.start();
-
-        Object result = new ASTBuilder().visit((escriptParser.StartContext) concreteTree);
-
+    private static ASTNode createAST(String source) {
+        Object result = new ASTBuilder().visit(createParser(source).start());
         return (ASTNode) result;
     }
 
-    private static void createASTVisual(ASTNode tree) {
+    private static void createVisualTree(Tree tree, String title) {
         // Random GUI stuff, TODO: Cleanup
-        JFrame frame = new JFrame("PrettyPrintVisitor Main");
+        JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         TreeViewer treeViewer = new TreeViewer(Arrays.asList(""), tree);
+        frame.setMinimumSize(new Dimension(300, 200));
+        frame.getContentPane().add(treeViewer, BorderLayout.CENTER);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    private static void createConcreteTreeVisual(escriptParser parser, String title) {
+        // Random GUI stuff, TODO: Cleanup
+        JFrame frame = new JFrame(title);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        TreeViewer treeViewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), parser.start());
         frame.setMinimumSize(new Dimension(300, 200));
         frame.getContentPane().add(treeViewer, BorderLayout.CENTER);
         frame.pack();
@@ -112,7 +123,7 @@ public class TestProgram {
                 )
         );
 
-        createASTVisual(tree);
+        createVisualTree(tree, "From Nodes We Springth");
         System.out.println(tree.toStringTree());
         System.out.println(new PrettyPrintVisitor().visit(tree));
     }
@@ -151,7 +162,7 @@ public class TestProgram {
                 "else\n" +
                 "{\n" +
                 "\tmsg = \"£\" + money;\n" +
-                "\tis_bankrupt = false;\n" +
+                "\tis_bankrupt = !false;\n" +
                 "\tmath = 3*(2-1)/4.3;\n" +
                 "}";
 
@@ -167,8 +178,9 @@ public class TestProgram {
         ASTNode formattedSourceAST = createAST(formattedSourceCode);
 
 
-        createASTVisual(sourceAST);
-        createASTVisual(formattedSourceAST);
+        createConcreteTreeVisual(createParser(sourceCode), "Antlr Concrete");
+        createVisualTree(sourceAST, "AST From Source");
+        createVisualTree(formattedSourceAST, "AST From Formatted Source");
 
         System.out.println("SOURCE TREE   : " + sourceAST.toStringTree());
         System.out.println("FORMATTED TREE: " + formattedSourceAST.toStringTree());
@@ -210,7 +222,7 @@ public class TestProgram {
 ////        System.out.println("REMADE TREE  : " + createAST(output).toStringTree());
 ////        System.out.println("TREE MATCHES : " + assignmentStatement.toStringTree().equals(createAST(output).toStringTree()));
 ////
-////        createASTVisual(assignmentStatement);
-////        createASTVisual(createAST(output));
+////        createVisualTree(assignmentStatement);
+////        createVisualTree(createAST(output));
 //    }
 }

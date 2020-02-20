@@ -161,7 +161,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
     @Override
     public String visitInvert(InvertNode node) {
-        return String.format("!(%s)", visit((ASTNode) node.getPayload()));
+        return String.format("!(%s)", visit((ASTNode) node.getChild(0)));
     }
 
     @Override
