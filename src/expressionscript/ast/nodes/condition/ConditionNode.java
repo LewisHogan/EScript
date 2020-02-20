@@ -1,6 +1,7 @@
 package expressionscript.ast.nodes.condition;
 
 import expressionscript.ast.nodes.ASTNode;
+import expressionscript.ast.nodes.values.BooleanNode;
 
 public class ConditionNode extends ASTNode<EComparisonOperator> {
 
@@ -15,6 +16,11 @@ public class ConditionNode extends ASTNode<EComparisonOperator> {
         addChild(left);
         addChild(right);
         setPayload(operator);
+    }
+
+    // Used for things like if is_bankrupt, rahter than is_bankrupt == true
+    public ConditionNode(ASTNode value) {
+
     }
 
     @Override

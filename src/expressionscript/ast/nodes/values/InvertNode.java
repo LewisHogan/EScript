@@ -10,6 +10,9 @@ public class InvertNode extends ASTNode<String> {
      */
     public InvertNode(ASTNode value) {
         addChild(value);
-        setPayload("!" + value.toString());
+        if (value instanceof BooleanNode)
+            setPayload("!");
+        else
+            setPayload("-");
     }
 }

@@ -11,7 +11,7 @@ import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
 import expressionscript.ast.nodes.condition.IfNode;
 import expressionscript.ast.nodes.statement.AssignmentNode;
-import org.antlr.v4.runtime.tree.Tree;
+import expressionscript.exceptions.TypeException;
 
 public class PrettyPrintVisitor extends ASTVisitor<String> {
 
@@ -24,12 +24,12 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitAssignment(AssignmentNode node) {
+    public String visitAssignment(AssignmentNode node) throws TypeException {
         return String.format("%s = %s", visit((ASTNode) node.getChild(0)), visit((ASTNode) node.getChild(1)));
     }
 
     @Override
-    public String visitBranch(BranchNode node) {
+    public String visitBranch(BranchNode node) throws TypeException {
         // Every branch will at least have a single ifpart aka IfNode
         // they may or may not have an else if or else part
         // the else if parts are the if nodes are the first one
@@ -52,8 +52,8 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         }
 
         if (isElsePresent) {
-            // TODO: If there are multiple nodes left, we need to go into another block
-            boolean elseHasBlock = node.getChildCount() > 1;
+            // If there are multiple nodes left, we need to go into another block
+            boolean elseHasBlock = (node.getChildCount() - ifNodeCount) > 1;
 
             if (elseHasBlock) {
                 String children = "";
@@ -66,7 +66,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
                 output += String.format("%selse {\n%s\n%s}\n", indent(indentationLevel++), children, indent(--indentationLevel));
             } else {
-                output += "else " + visit(node.getChild(node.getChildCount() - 1)) + ";";
+                output += "else " + visit(node.getChild(node.getChildCount() - 1));
             }
         }
 
@@ -74,7 +74,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitCondition(ConditionNode node) {
+    public String visitCondition(ConditionNode node) throws TypeException {
         String output = String.format("%s %s %s",
                 visit(node.getChild(0)), node.getPayload(), visit(node.getChild(1))
         );
@@ -92,7 +92,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitIf(IfNode node) {
+    public String visitIf(IfNode node) throws TypeException {
 
         // If we have multiple statements to one ifNode, when need to put them in braces or we have changed
         // the meaning of the code
@@ -121,9 +121,9 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitString(StringNode node) {
+    public String visitString(StringNode node) throws TypeException {
         // The first and last characters are quote characters
-        return ((String) node.getPayload()).substring(1, ((String) node.getPayload()).length() - 1);
+        return ((String) node.getPayload());
     }
 
     @Override
@@ -132,7 +132,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitExpression(ExpressionNode node) {
+    public String visitExpression(ExpressionNode node) throws TypeException {
         String output = String.format("%s %s %s", visit(node.getChild(0)), node.getPayload(), visit(node.getChild(1)));
         if (node.getParent() instanceof ExpressionNode) {
             boolean needsParens = ((EExpressionOperator) node.getParent().getPayload()).isHigherPriority(
@@ -145,31 +145,31 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     }
 
     @Override
-    public String visitBoolean(BooleanNode node) {
+    public String visitBoolean(BooleanNode node) throws TypeException {
         return node.getPayload().toString();
     }
 
     @Override
-    public String visitInteger(IntegerNode node) {
+    public String visitInteger(IntegerNode node) throws TypeException {
         return node.toString();
     }
 
     @Override
-    public String visitFloat(FloatNode node) {
+    public String visitFloat(FloatNode node) throws TypeException {
         return node.toString();
     }
 
     @Override
-    public String visitInvert(InvertNode node) {
-        return String.format("!(%s)", visit((ASTNode) node.getChild(0)));
+    public String visitInvert(InvertNode node) throws TypeException {
+        return String.format("%s(%s)", node.getPayload(), visit((ASTNode) node.getChild(0)));
     }
 
     @Override
-    public String visitStart(StartNode node) {
+    public String visitStart(StartNode node) throws TypeException {
         String output = "";
         for (int i = 0; i < node.getChildCount(); i++) {
             ASTNode child = (ASTNode) node.getChild(i);
-            output += visit(node.getChild(i));
+            output += visit(node.getChild(i)) + ";";
             if (i != node.getChildCount() - 1) output += "\n";
         }
         return output;

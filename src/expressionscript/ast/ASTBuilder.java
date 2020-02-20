@@ -192,7 +192,6 @@ public class ASTBuilder extends escriptBaseVisitor {
             node = new VariableNode(ctx.val.getText());
         } else if (ctx.val.getText().contains(".")) {
             // Floating point
-            // TODO: Create FloatNode
             node = new FloatNode(Float.valueOf(ctx.val.getText()));
         } else if (ctx.val.getType() == escriptParser.NUMBER) {
             // Integer
@@ -241,6 +240,11 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitExpressionParens(escriptParser.ExpressionParensContext ctx) {
+        if (ctx.SUB() != null) {
+            return new InvertNode(
+                    (ASTNode) visit(ctx.expression())
+            );
+        }
         return visit(ctx.expression());
     }
 

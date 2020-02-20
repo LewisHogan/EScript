@@ -1,3 +1,4 @@
+import expressionscript.EvaluatorVisitor;
 import expressionscript.PrettyPrintVisitor;
 import expressionscript.ast.ASTBuilder;
 import expressionscript.ast.nodes.ASTNode;
@@ -14,6 +15,7 @@ import expressionscript.ast.nodes.values.StringNode;
 import expressionscript.ast.nodes.statement.AssignmentNode;
 import expressionscript.escriptLexer;
 import expressionscript.escriptParser;
+import expressionscript.exceptions.TypeException;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -125,10 +127,11 @@ public class TestProgram {
 
         createVisualTree(tree, "From Nodes We Springth");
         System.out.println(tree.toStringTree());
-        System.out.println(new PrettyPrintVisitor().visit(tree));
+//        System.out.println(new PrettyPrintVisitor().visit(tree));
     }
 
     public static void main(String[] args) {
+        try {
 //        String sourceCode = "name=\"lewis\";\n" +
 //                "age = 2020 - 1997;\n" +
 //                "money = age * 356;\n" +
@@ -141,50 +144,56 @@ public class TestProgram {
 //                "}\n" +
 //                "else msg = \"£\" + money;";
 
-//        String sourceCode = "name = \"lh16674\";age = 22;\n" +
-//                "    money = 22 * 1000 - 9250;\n" +
-//                "is_bankrupt = money       <\n" +
-//                " 0;\n" +
-//                "\n" +
-//                " if (is_bankrupt == true)\n" +
-//                "    age = age + 50;\n" +
-//                "    else if (100 > 50){\n" +
-//                "        money = money * 10;\n" +
-//                "        money = money + 1;}\n" +
-//                "  else\n" +
-//                "    money = 9999;";
+        String sourceCode = "name = \"lh16674\";age = 22;\n" +
+                "    money = 22 * 1000 - 9250;\n" +
+                "is_bankrupt = money       >\n" +
+                " 0;\n" +
+                "\n" +
+                " if (is_bankrupt == true)\n" +
+                "    age = age + 50;\n" +
+                "    else if (100 > 50){\n" +
+                "        money = money * 10;\n" +
+                "        money = money + 1;}\n" +
+                "  else\n" +
+                "    money = 9999;";
 
-        String sourceCode = "if (a == b)\n" +
-                "\tmsg = \"Empty Account\";\n" +
-                "else if (money >= 100) {\n" +
-                "\tmsg = \"£MAX\";\n" +
-                "}\n" +
-                "else\n" +
-                "{\n" +
-                "\tmsg = \"£\" + money;\n" +
-                "\tis_bankrupt = !false;\n" +
-                "\tmath = 3*(2-1)/4.3;\n" +
-                "}";
+//        String sourceCode = "if (a == b)\n" +
+//                "\tmsg = \"Empty Account\";\n" +
+//                "else if (money >= 100) {\n" +
+//                "\tmsg = \"£MAX\";\n" +
+//                "}\n" +
+//                "else\n" +
+//                "{\n" +
+//                "\tmsg = \"£\" + money;\n" +
+//                "\tis_bankrupt = !false;\n" +
+//                "\tmath = 3*(2-1)/4.3;\n" +
+//                "}";
 
-        System.out.println("INPUT");
-        System.out.println("----------------------------------------------------------");
-        System.out.println(sourceCode);
-        System.out.println("OUTPUT");
-        System.out.println("----------------------------------------------------------");
+//            String sourceCode = "name=-(3+5); test=false;";
+            System.out.println("INPUT");
+            System.out.println("----------------------------------------------------------");
+            System.out.println(sourceCode);
+            System.out.println("OUTPUT");
+            System.out.println("----------------------------------------------------------");
 
-        ASTNode sourceAST = createAST(sourceCode);
-        String formattedSourceCode = new PrettyPrintVisitor().visit(sourceAST);
-        System.out.println(formattedSourceCode);
-        ASTNode formattedSourceAST = createAST(formattedSourceCode);
+            ASTNode sourceAST = createAST(sourceCode);
+            String formattedSourceCode = new PrettyPrintVisitor().visit(sourceAST);
+            System.out.println(formattedSourceCode);
+            ASTNode formattedSourceAST = createAST(formattedSourceCode);
 
 
-        createConcreteTreeVisual(createParser(sourceCode), "Antlr Concrete");
-        createVisualTree(sourceAST, "AST From Source");
-        createVisualTree(formattedSourceAST, "AST From Formatted Source");
+            createConcreteTreeVisual(createParser(sourceCode), "Antlr Concrete");
+            createVisualTree(sourceAST, "AST From Source");
+            createVisualTree(formattedSourceAST, "AST From Formatted Source");
 
-        System.out.println("SOURCE TREE   : " + sourceAST.toStringTree());
-        System.out.println("FORMATTED TREE: " + formattedSourceAST.toStringTree());
-        System.out.println("EQUIVALENT    : " + sourceAST.toStringTree().equals(formattedSourceAST.toStringTree()));
+            System.out.println("SOURCE TREE   : " + sourceAST.toStringTree());
+            System.out.println("FORMATTED TREE: " + formattedSourceAST.toStringTree());
+            System.out.println("EQUIVALENT    : " + sourceAST.toStringTree().equals(formattedSourceAST.toStringTree()));
+
+            System.out.println(new EvaluatorVisitor().visit(sourceAST));
+        } catch (TypeException err) {
+            err.printStackTrace();
+        }
     }
 
 //    public static void main(String[] args) {

@@ -34,20 +34,20 @@ public enum EExpressionOperator {
         return this.priority > priority;
     }
 
-    private boolean isValidOperand(ASTNode operand) {
+    private boolean isValidOperand(Object operand) {
         switch (this) {
+            // Special cases go here
             case ADD:
-                if (operand instanceof IntegerNode) return true;
-                if (operand instanceof StringNode) return true;
-            case SUBTRACT:
-                if (operand instanceof IntegerNode) return true;
-            default:
-                if (operand instanceof IntegerNode) return true; // Integer is compatible with all operations
+                if (operand instanceof String) return true;
         }
+
+        if (operand instanceof Integer) return true;
+        if (operand instanceof Float) return true;
+
         return false;
     }
 
-    public boolean areValidOperands(ASTNode left, ASTNode right) {
+    public boolean areValidOperands(Object left, Object right) {
         return isValidOperand(left) && isValidOperand(right);
     }
 }
