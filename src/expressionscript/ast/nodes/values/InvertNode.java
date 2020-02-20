@@ -1,6 +1,7 @@
 package expressionscript.ast.nodes.values;
 
 import expressionscript.ast.nodes.ASTNode;
+import expressionscript.ast.nodes.condition.ConditionNode;
 
 public class InvertNode extends ASTNode<String> {
     /**
@@ -10,7 +11,7 @@ public class InvertNode extends ASTNode<String> {
      */
     public InvertNode(ASTNode value) {
         addChild(value);
-        if (value instanceof BooleanNode)
+        if (value instanceof BooleanNode || (value instanceof ConditionNode))
             setPayload("!");
         else
             setPayload("-");

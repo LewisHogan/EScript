@@ -1,6 +1,7 @@
 package expressionscript.ast.nodes.condition;
 
 import expressionscript.ast.nodes.ASTNode;
+import expressionscript.ast.nodes.statement.IfNode;
 
 import java.util.List;
 

@@ -1,5 +1,4 @@
-import expressionscript.EvaluatorVisitor;
-import expressionscript.PrettyPrintVisitor;
+import expressionscript.*;
 import expressionscript.ast.ASTBuilder;
 import expressionscript.ast.nodes.ASTNode;
 import expressionscript.ast.nodes.statement.EExpressionOperator;
@@ -10,11 +9,9 @@ import expressionscript.ast.nodes.values.VariableNode;
 import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
 import expressionscript.ast.nodes.condition.EComparisonOperator;
-import expressionscript.ast.nodes.condition.IfNode;
+import expressionscript.ast.nodes.statement.IfNode;
 import expressionscript.ast.nodes.values.StringNode;
 import expressionscript.ast.nodes.statement.AssignmentNode;
-import expressionscript.escriptLexer;
-import expressionscript.escriptParser;
 import expressionscript.exceptions.TypeException;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
@@ -136,26 +133,26 @@ public class TestProgram {
 //                "age = 2020 - 1997;\n" +
 //                "money = age * 356;\n" +
 //                "\n" +
-//                "is_bankrupt = money > 0;\n" +
+//                "is_bankrupt = money <= 0;\n" +
 //                "\n" +
-//                "if (is_bankrupt == true) msg = \"Empty Account\";\n" +
-//                "else if (money > 100) {\n" +
+//                "if (is_bankrupt) msg = \"Empty Account\";\n" +
+//                "else if (money > 10000) {\n" +
 //                "\tmsg = \"£MAX\";\n" +
 //                "}\n" +
-//                "else msg = \"£\" + money;";
+//                "else msg = \"£\" + (money / 1.5);";
 
-        String sourceCode = "name = \"lh16674\";age = 22;\n" +
-                "    money = 22 * 1000 - 9250;\n" +
-                "is_bankrupt = money       >\n" +
-                " 0;\n" +
-                "\n" +
-                " if (is_bankrupt == true)\n" +
-                "    age = age + 50;\n" +
-                "    else if (100 > 50){\n" +
-                "        money = money * 10;\n" +
-                "        money = money + 1;}\n" +
-                "  else\n" +
-                "    money = 9999;";
+//        String sourceCode = "name = \"lh16674\";age = 22;\n" +
+//                "    money = 22 * 1000 - 9250;\n" +
+//                "is_bankrupt = money       >\n" +
+//                " 0;\n" +
+//                "\n" +
+//                " if (is_bankrupt == true)\n" +
+//                "    age = age + 50;\n" +
+//                "    else if (100 > 50){\n" +
+//                "        money = money * 10;\n" +
+//                "        money = money + 1;}\n" +
+//                "  else\n" +
+//                "    money = 9999;";
 
 //        String sourceCode = "if (a == b)\n" +
 //                "\tmsg = \"Empty Account\";\n" +
@@ -170,9 +167,14 @@ public class TestProgram {
 //                "}";
 
 //            String sourceCode = "name=-(3+5); test=false;";
+
+            String sourceCode = "n = 12;previous = 0;current = 1;index = 1;while (index <= n){current;temp = current;current = current + previous;previous = temp;index = index + 1;}";
+
+            System.out.println("----------------------------------------------------------");
             System.out.println("INPUT");
             System.out.println("----------------------------------------------------------");
             System.out.println(sourceCode);
+            System.out.println("----------------------------------------------------------");
             System.out.println("OUTPUT");
             System.out.println("----------------------------------------------------------");
 
@@ -186,11 +188,18 @@ public class TestProgram {
             createVisualTree(sourceAST, "AST From Source");
             createVisualTree(formattedSourceAST, "AST From Formatted Source");
 
+            System.out.println("----------------------------------------------------------");
+            System.out.println("TREES");
             System.out.println("SOURCE TREE   : " + sourceAST.toStringTree());
             System.out.println("FORMATTED TREE: " + formattedSourceAST.toStringTree());
             System.out.println("EQUIVALENT    : " + sourceAST.toStringTree().equals(formattedSourceAST.toStringTree()));
+            System.out.println("----------------------------------------------------------");
 
+            System.out.println("----------------------------------------------------------");
+            System.out.println("EVAL");
+            System.out.println("----------------------------------------------------------");
             System.out.println(new EvaluatorVisitor().visit(sourceAST));
+//            System.out.println(new PythonCompileVisitor().visit(sourceAST));
         } catch (TypeException err) {
             err.printStackTrace();
         }

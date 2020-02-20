@@ -6,10 +6,7 @@ import expressionscript.ast.nodes.StartNode;
 import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
 import expressionscript.ast.nodes.condition.EComparisonOperator;
-import expressionscript.ast.nodes.condition.IfNode;
-import expressionscript.ast.nodes.statement.AssignmentNode;
-import expressionscript.ast.nodes.statement.EExpressionOperator;
-import expressionscript.ast.nodes.statement.ExpressionNode;
+import expressionscript.ast.nodes.statement.*;
 import expressionscript.ast.nodes.values.*;
 import expressionscript.exceptions.TypeException;
 
@@ -180,7 +177,7 @@ public class EvaluatorVisitor extends ASTVisitor {
         // By this point we know both operands are the same type.
         switch (op) {
             case ADD:
-                if (left instanceof String)
+                if (left instanceof String) //TODO: Remove quote marks from before appending
                     return left.toString() + right;
                 if (left instanceof Integer)
                     return (Integer) left + (Integer) right;
@@ -261,6 +258,17 @@ public class EvaluatorVisitor extends ASTVisitor {
             output += visit(node.getChild(i));
             if (i != node.getChildCount() - 1) output += "\n";
         }
-        return output + "\n" + symbolTable;
+        return output + "\n" + symbolTable.toString();
+    }
+
+    @Override
+    public Object visitWhile(WhileNode node) throws TypeException {
+        Object result = null;
+        while ((Boolean) visit((ASTNode) node.getPayload())) {
+            for (int i = 0; i < node.getChildCount(); i++) {
+                result = visit(node.getChild(i));
+            }
+        }
+        return result;
     }
 }

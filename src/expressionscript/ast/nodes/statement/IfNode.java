@@ -1,6 +1,7 @@
-package expressionscript.ast.nodes.condition;
+package expressionscript.ast.nodes.statement;
 
 import expressionscript.ast.nodes.ASTNode;
+import expressionscript.ast.nodes.condition.ConditionNode;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class IfNode extends ASTNode<ConditionNode> {
      */
     public IfNode(ConditionNode condition, List<ASTNode> statements) {
         setPayload(condition);
-        statements.forEach(this::addChild);
+        if (statements != null)
+            statements.forEach(this::addChild);
     }
 }

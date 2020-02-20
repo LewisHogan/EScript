@@ -5,10 +5,7 @@ import expressionscript.ast.nodes.StartNode;
 import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
 import expressionscript.ast.nodes.condition.EComparisonOperator;
-import expressionscript.ast.nodes.condition.IfNode;
-import expressionscript.ast.nodes.statement.AssignmentNode;
-import expressionscript.ast.nodes.statement.EExpressionOperator;
-import expressionscript.ast.nodes.statement.ExpressionNode;
+import expressionscript.ast.nodes.statement.*;
 import expressionscript.ast.nodes.values.*;
 import expressionscript.escriptBaseVisitor;
 import expressionscript.escriptParser;
@@ -49,8 +46,9 @@ public class ASTBuilder extends escriptBaseVisitor {
         Object ifStatement = visit(ctx.statement(0));
         if (!(ifStatement instanceof List)) ifStatement = Arrays.asList(ifStatement);
 
+        ConditionNode conditionNode = (ConditionNode) visit(ctx.condition(0));
         IfNode ifNode = new IfNode(
-                (ConditionNode) visit(ctx.condition(0)),
+                conditionNode,
                 (List) ifStatement
         );
 
@@ -82,7 +80,15 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitStatementWhile(escriptParser.StatementWhileContext ctx) {
-        return super.visitStatementWhile(ctx);
+        Object whileStatements = visit(ctx.statement());
+        if (!(whileStatements instanceof List)) whileStatements = Arrays.asList(whileStatements);
+
+        return new WhileNode(
+                new ConditionNode(
+                        (ASTNode) visit(ctx.condition())
+                ),
+                (List) whileStatements
+        );
     }
 
     @Override
@@ -138,7 +144,7 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitConditionExpression(escriptParser.ConditionExpressionContext ctx) {
-        return visit(ctx.expression());
+        return new ConditionNode((ASTNode) visit(ctx.expression()));
     }
 
     @Override
@@ -149,8 +155,10 @@ public class ASTBuilder extends escriptBaseVisitor {
     @Override
     public Object visitConditionInverted(escriptParser.ConditionInvertedContext ctx) {
         // TODO: ADD inversion node?
-        return new InvertNode(
-                (ASTNode) visit(ctx.condition())
+        return new ConditionNode(
+                new InvertNode(
+                        (ASTNode) visit(ctx.condition())
+                )
         );
     }
 

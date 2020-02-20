@@ -4,13 +4,10 @@ import expressionscript.ast.ASTVisitor;
 import expressionscript.ast.nodes.ASTNode;
 import expressionscript.ast.nodes.StartNode;
 import expressionscript.ast.nodes.condition.EComparisonOperator;
-import expressionscript.ast.nodes.statement.EExpressionOperator;
-import expressionscript.ast.nodes.statement.ExpressionNode;
+import expressionscript.ast.nodes.statement.*;
 import expressionscript.ast.nodes.values.*;
 import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
-import expressionscript.ast.nodes.condition.IfNode;
-import expressionscript.ast.nodes.statement.AssignmentNode;
 import expressionscript.exceptions.TypeException;
 
 public class PrettyPrintVisitor extends ASTVisitor<String> {
@@ -75,6 +72,10 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
     @Override
     public String visitCondition(ConditionNode node) throws TypeException {
+        if (node.getChildCount() == 1) {
+            return String.format("%s", visit(node.getChild(0)));
+        }
+
         String output = String.format("%s %s %s",
                 visit(node.getChild(0)), node.getPayload(), visit(node.getChild(1))
         );
@@ -173,5 +174,27 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
             if (i != node.getChildCount() - 1) output += "\n";
         }
         return output;
+    }
+
+    @Override
+    public String visitWhile(WhileNode node) throws TypeException {
+        boolean hasStatementBlock = node.getChildCount() > 1;
+
+        if (hasStatementBlock) {
+            String children = "";
+            for (int i = 0; i < node.getChildCount(); i++) {
+                // If children are not branch or block nodes, we'll need to add a semi colon to the end
+                children += indent(++indentationLevel) + visit(node.getChild(i)) + ";";
+                if (i < node.getChildCount() - 1) children += "\n";
+                indentationLevel--;
+            }
+
+            return String.format("%swhile (%s) {\n%s\n%s}\n", indent(indentationLevel++), visit((ASTNode) node.getPayload()), children, indent(--indentationLevel));
+        }
+
+        return String.format("while (%s) %s\n",
+                visit((ASTNode) node.getPayload()),
+                visit(node.getChild(0))
+        );
     }
 }

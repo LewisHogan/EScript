@@ -3,10 +3,11 @@ package expressionscript.ast;
 import expressionscript.ast.nodes.ASTNode;
 import expressionscript.ast.nodes.StartNode;
 import expressionscript.ast.nodes.statement.ExpressionNode;
+import expressionscript.ast.nodes.statement.WhileNode;
 import expressionscript.ast.nodes.values.*;
 import expressionscript.ast.nodes.condition.BranchNode;
 import expressionscript.ast.nodes.condition.ConditionNode;
-import expressionscript.ast.nodes.condition.IfNode;
+import expressionscript.ast.nodes.statement.IfNode;
 import expressionscript.ast.nodes.statement.AssignmentNode;
 import expressionscript.exceptions.TypeException;
 import org.antlr.v4.runtime.tree.Tree;
@@ -31,6 +32,7 @@ public abstract class ASTVisitor<E> {
         if (node instanceof FloatNode) return visitFloat((FloatNode) node);
         if (node instanceof InvertNode) return visitInvert((InvertNode) node);
         if (node instanceof StartNode) return visitStart((StartNode) node);
+        if (node instanceof WhileNode) return visitWhile((WhileNode) node);
         return null;
     }
 
@@ -57,4 +59,6 @@ public abstract class ASTVisitor<E> {
     public abstract E visitInvert(InvertNode node) throws TypeException;
 
     public abstract E visitStart(StartNode node) throws TypeException;
+
+    public abstract E visitWhile(WhileNode node) throws TypeException;
 }

@@ -18,13 +18,15 @@ public class ConditionNode extends ASTNode<EComparisonOperator> {
         setPayload(operator);
     }
 
-    // Used for things like if is_bankrupt, rahter than is_bankrupt == true
+    // Used for things like if is_bankrupt, rather than is_bankrupt == true
     public ConditionNode(ASTNode value) {
-
+        addChild(value);
+        setPayload(EComparisonOperator.EQUALS);
     }
 
     @Override
     public String toString() {
+        if (getChildCount() == 1) return String.format("%s", getChild(0));
         return String.format("%s %s %s", getChild(0), getPayload(), getChild(1));
     }
 }
