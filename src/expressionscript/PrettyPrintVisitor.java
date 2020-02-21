@@ -33,7 +33,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         // The else part is only present if we have any branches that are not ifNodes
 
         boolean isElsePresent = false;
-        int ifNodeCount = 0;
+        int ifNodeCount = node.getChildCount();
         // Do a pass over the nodes to see if we have any else parts
         for (int i = 0; i < node.getChildCount(); i++) {
             if (!(node.getChild(i) instanceof IfNode)) {
@@ -63,7 +63,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
                 output += String.format("%selse {\n%s\n%s}\n", indent(indentationLevel++), children, indent(--indentationLevel));
             } else {
-                output += "else " + visit(node.getChild(node.getChildCount() - 1));
+                output += "else " + visit(node.getChild(node.getChildCount() - 1)) + ";";
             }
         }
 
@@ -170,7 +170,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         String output = "";
         for (int i = 0; i < node.getChildCount(); i++) {
             ASTNode child = (ASTNode) node.getChild(i);
-            output += visit(node.getChild(i)) + (node.getChild(i) instanceof WhileNode ? "" : ";");
+            output += visit(node.getChild(i)) + ((node.getChild(i) instanceof WhileNode || (node.getChild(i) instanceof BranchNode)) ? "" : ";");
             if (i != node.getChildCount() - 1) output += "\n";
         }
         return output;

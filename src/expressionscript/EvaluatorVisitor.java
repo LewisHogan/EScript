@@ -53,16 +53,18 @@ public class EvaluatorVisitor extends ASTVisitor {
 
     @Override
     public Object visitCondition(ConditionNode node) throws TypeException {
-        // Experimental single variable condition
         if (node.getChildCount() == 1) {
             Object child = visit(node.getChild(0));
             if (child instanceof Boolean) return (Boolean) child;
             return visit(node.getChild(0));
         }
 
-        EComparisonOperator op = (EComparisonOperator) node.getPayload();
+        // Experimental single variable condition
         Object left = node.getChild(0);
         Object right = node.getChild(1);
+
+
+        EComparisonOperator op = (EComparisonOperator) node.getPayload();
 
         left = visit((ASTNode) left);
         right = visit((ASTNode) right);
