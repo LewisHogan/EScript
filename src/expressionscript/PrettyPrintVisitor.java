@@ -63,7 +63,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
                 output += String.format("%selse {\n%s\n%s}\n", indent(indentationLevel++), children, indent(--indentationLevel));
             } else {
-                output += "else " + visit(node.getChild(node.getChildCount() - 1)) + ";";
+                output += indent(indentationLevel) + "else " + visit(node.getChild(node.getChildCount() - 1));
             }
         }
 
@@ -162,7 +162,10 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
     @Override
     public String visitInvert(InvertNode node) throws TypeException {
-        return String.format("%s(%s)", node.getPayload(), visit((ASTNode) node.getChild(0)));
+        if (node.getPayload().toString().startsWith("!")) {
+            return String.format("(!%s)", visit((ASTNode) node.getChild(0)));
+        }
+        return String.format("-(%s)", visit((ASTNode) node.getChild(0)));
     }
 
     @Override
@@ -180,6 +183,8 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     public String visitWhile(WhileNode node) throws TypeException {
         boolean hasStatementBlock = node.getChildCount() > 1;
 
+        WhileHead whileHead = (WhileHead) node.getPayload();
+
         if (hasStatementBlock) {
             String children = "";
             for (int i = 0; i < node.getChildCount(); i++) {
@@ -189,11 +194,11 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
                 indentationLevel--;
             }
 
-            return String.format("%swhile (%s) {\n%s\n%s}\n", indent(indentationLevel++), visit((ASTNode) node.getPayload()), children, indent(--indentationLevel));
+            return String.format("%swhile (%s) {\n%s\n%s}\n", indent(indentationLevel++), visit(whileHead.condition), children, indent(--indentationLevel));
         }
 
         return String.format("while (%s) %s\n",
-                visit((ASTNode) node.getPayload()),
+                visit(whileHead.condition),
                 visit(node.getChild(0)) + ";"
         );
     }
@@ -201,5 +206,34 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
     @Override
     public String visitPrint(PrintNode node) throws TypeException {
         return String.format("print(%s)", visit(node.getChild(0)));
+    }
+
+    @Override
+    public String visitFor(ForNode node) throws TypeException {
+        ForHead forHead = (ForHead) node.getPayload();
+        String bodyStatements = "";
+        for (int i = 0; i < node.getChildCount(); i++) {
+            bodyStatements += visit(node.getChild(i));
+            if (i != node.getChildCount()-1) bodyStatements += "\n";
+        }
+
+        if (node.getChildCount() == 1) {
+            return String.format("for (%s; %s; %s) %s",
+                    visit(forHead.init),
+                    visit(forHead.condition),
+                    visit(forHead.next),
+                    bodyStatements
+            );
+        }
+
+        String output = String.format("for (%s; %s; %s) {\n%s%s\n}",
+                visit(forHead.init),
+                visit(forHead.condition),
+                visit(forHead.next),
+                indent(++indentationLevel),
+                bodyStatements);
+
+        indentationLevel--;
+        return output;
     }
 }

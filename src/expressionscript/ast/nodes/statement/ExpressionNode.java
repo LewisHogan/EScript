@@ -7,7 +7,7 @@ public class ExpressionNode extends ASTNode {
      * Node that represents a single expression (e.g. 1 + a, or 2 * 3).
      *
      * @param left     Left Operand.
-     * @param operator Expression Operator (+, * /, etc)
+     * @param operator Expression Operator (+, *, /, etc)
      * @param right    Right Operand.
      */
     public ExpressionNode(ASTNode left, EExpressionOperator operator, ASTNode right) {

@@ -31,6 +31,7 @@ public abstract class ASTVisitor<E> {
         if (node instanceof StartNode) return visitStart((StartNode) node);
         if (node instanceof WhileNode) return visitWhile((WhileNode) node);
         if (node instanceof PrintNode) return visitPrint((PrintNode) node);
+        if (node instanceof ForNode) return visitFor((ForNode) node);
         return null;
     }
 
@@ -61,4 +62,6 @@ public abstract class ASTVisitor<E> {
     public abstract E visitWhile(WhileNode node) throws TypeException;
 
     public abstract E visitPrint(PrintNode node) throws TypeException;
+
+    public abstract E visitFor(ForNode node) throws TypeException;
 }

@@ -179,7 +179,13 @@ public class TestProgram {
 //                    "}\n" +
 //                    "msg=\"£\" + \"/\" + money;";
 
-            String sourceCode = "n = 12;previous = 0;current = 1;index = 1;while index <= n { print(current);temp = current;current = current + previous;previous = temp;index = index + 1; }";
+//            String sourceCode = "n = 12.3; print(n || 1); previous = 0;current = 1;index = 1;while index <= n { print(current);temp = current;current = current + previous;previous = temp;index = index + 1; }";
+
+//            String sourceCode = "for (i = 0; i <= 5; i = i + 1) { print(i);}";
+//            String sourceCode = "n=100;odd=0;even=0;index=1; while index <= n { if index % 2 == 0 even = even + index; else odd = odd + index; index = index + 1; } print(odd);print(even);print(odd + even);";
+//            String sourceCode = "result = 3 > 2 != 1 < 2; print(\"Result is not \" + !result);";
+
+            String sourceCode = "a=2; b =a+3*2;";
 
             System.out.println("----------------------------------------------------------");
             System.out.println("INPUT");

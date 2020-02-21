@@ -11,7 +11,7 @@ public enum EExpressionOperator {
     MULTIPLY("*", 2),
     POWER("**", 3),
     SQRT("//", 3),
-    MODULUS("%", 3);
+    MODULO("%", 3);
 
     private String op;
     private int priority;
@@ -34,20 +34,16 @@ public enum EExpressionOperator {
         return this.priority > priority;
     }
 
-    private boolean isValidOperand(Object operand) {
+
+    public boolean areValidOperands(Object left, Object right) {
         switch (this) {
             // Special cases go here
             case ADD:
-                if (operand instanceof String) return true;
+                if (left instanceof String || right instanceof String) return true;
         }
 
-        if (operand instanceof Integer) return true;
-        if (operand instanceof Float) return true;
+        if (left instanceof Number || right instanceof Number) return true;
 
         return false;
-    }
-
-    public boolean areValidOperands(Object left, Object right) {
-        return isValidOperand(left) && isValidOperand(right);
     }
 }

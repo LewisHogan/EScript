@@ -17,6 +17,8 @@ public class EvaluatorVisitor extends ASTVisitor {
     int currentStatement = 0;
     private HashMap<String, Object> symbolTable = new HashMap<>();
 
+    EvaluationResults results = new EvaluationResults();
+
     @Override
     public Object visitAssignment(AssignmentNode node) throws TypeException {
         String variable = node.getChild(0).getPayload().toString();
@@ -95,6 +97,7 @@ public class EvaluatorVisitor extends ASTVisitor {
                 break;
             case OR:
                 if (left instanceof Boolean) return (((Boolean) left) || ((Boolean) right));
+                if (left instanceof Integer && (((Integer) left) == 0)) return true;
                 break;
             case GREATER_THEN_OR_EQUALS:
                 if (left instanceof Integer)
@@ -171,8 +174,12 @@ public class EvaluatorVisitor extends ASTVisitor {
                     temp = temp.substring(1, temp.length()-1);
                 right = temp;
             }
-            else if (right instanceof String)
-                left = left.toString();
+            else if (right instanceof String) {
+                String temp = left.toString();
+                if (temp.startsWith("\"") && temp.endsWith("\""))
+                    temp = temp.substring(1, temp.length()-1);
+                left = temp;
+            }
             else if (left instanceof Float && right instanceof Integer)
                 right = Float.valueOf((Integer) right);
             else if (left instanceof Integer && right instanceof Float)
@@ -207,7 +214,7 @@ public class EvaluatorVisitor extends ASTVisitor {
                 if (left instanceof Float)
                     return (Float) left / (Float) right;
                 break;
-            case MODULUS:
+            case MODULO:
                 if (left instanceof Integer)
                     return (Integer) left % (Integer) right;
                 if (left instanceof Float)
@@ -258,18 +265,21 @@ public class EvaluatorVisitor extends ASTVisitor {
 
     @Override
     public Object visitStart(StartNode node) throws TypeException {
-        String output = "";
+        results = new EvaluationResults();
+//        String output = "";
         for (int i = 0; i < node.getChildCount(); i++) {
-            output += visit(node.getChild(i));
-            if (i != node.getChildCount() - 1) output += "\n";
+            visit(node.getChild(i));
+//            if (i != node.getChildCount() - 1) output += "\n";
         }
-        return symbolTable.toString();
+        results.variableMap = (HashMap) symbolTable.clone();
+        return results;
     }
 
     @Override
     public Object visitWhile(WhileNode node) throws TypeException {
         Object result = null;
-        while ((Boolean) visit((ASTNode) node.getPayload())) {
+        WhileHead whileHead = (WhileHead) node.getPayload();
+        while ((Boolean) visit(whileHead.condition)) {
             for (int i = 0; i < node.getChildCount(); i++) {
                 result = visit(node.getChild(i));
             }
@@ -280,7 +290,21 @@ public class EvaluatorVisitor extends ASTVisitor {
     @Override
     public Object visitPrint(PrintNode node) throws TypeException {
         Object result = visit(node.getChild(0));
-        System.out.println(result);
-        return "";
+        results.lines.add(result.toString());
+        return result.toString();
+    }
+
+    @Override
+    public Object visitFor(ForNode node) throws TypeException {
+        Object result = null;
+        ForHead forHead = (ForHead) node.getPayload();
+        visit(forHead.init);
+        while ((Boolean) visit(forHead.condition)) {
+            for (int i = 0; i < node.getChildCount(); i++) {
+                result = visit(node.getChild(i));
+            }
+            visit(forHead.next);
+        }
+        return result;
     }
 }

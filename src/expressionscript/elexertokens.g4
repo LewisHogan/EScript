@@ -20,7 +20,7 @@ EQUALS: '==';
 NOTEQUALS: '!=';
 NOT: '!';
 
-// Boolean Values
+// Boolean Tokens
 TRUE: 'true';
 FALSE: 'false';
 
@@ -52,7 +52,7 @@ INTEGER: [0-9]+;
 // Identifier (used as variable names, function names, etc)
 // Takes any character or _ in the english alphabet to start with, then any character, digit within the english language
 // or the _ following the first character
-ID: ([a-zA-Z]|'_')+([a-zA-Z0-9])*;
+ID: ([a-zA-Z]|'_')+([a-zA-Z0-9]|'_')*;
 STRING: '"' .*? '"';
 
 // Ignore whitespace

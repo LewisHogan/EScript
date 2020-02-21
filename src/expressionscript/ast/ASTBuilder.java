@@ -93,7 +93,15 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitStatementFor(escriptParser.StatementForContext ctx) {
-        return super.visitStatementFor(ctx);
+        Object forStatements = visit(ctx.statement(1));
+        if (!(forStatements instanceof List)) forStatements = Arrays.asList(forStatements);
+
+        return new ForNode(
+                (AssignmentNode) visit(ctx.statement(0)),
+                (ConditionNode) visit(ctx.condition()),
+                (ASTNode) visit(ctx.expression()),
+                (List) forStatements
+        );
     }
 
     @Override
@@ -138,8 +146,8 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitConditionValue(escriptParser.ConditionValueContext ctx) {
-        return new BooleanNode(ctx.value.getType() == escriptParser.TRUE);
+    public Object visitExpressionBoolean(escriptParser.ExpressionBooleanContext ctx) {
+        return new BooleanNode(ctx.val.getType() == escriptParser.TRUE);
     }
 
     @Override
@@ -198,7 +206,7 @@ public class ASTBuilder extends escriptBaseVisitor {
         ASTNode node = null;
         if (ctx.ID() != null) {
             node = new VariableNode(ctx.val.getText());
-        } else if (ctx.val.getText().contains(".")) {
+        } else if (ctx.val.getText().contains(".") && ctx.val.getType() == escriptParser.NUMBER) {
             // Floating point
             node = new FloatNode(Float.valueOf(ctx.val.getText()));
         } else if (ctx.val.getType() == escriptParser.NUMBER) {
@@ -212,11 +220,14 @@ public class ASTBuilder extends escriptBaseVisitor {
             return new InvertNode(node);
         }
 
+        if (ctx.NOT() != null)
+            return new InvertNode(node, true);
+
         return node;
     }
 
     @Override
-    public Object visitExpressionMath(escriptParser.ExpressionMathContext ctx) {
+    public Object visitExpressionUnary(escriptParser.ExpressionUnaryContext ctx) {
         EExpressionOperator op = null;
         switch (ctx.op.getType()) {
             case escriptParser.POW:
@@ -229,7 +240,7 @@ public class ASTBuilder extends escriptBaseVisitor {
                 op = EExpressionOperator.DIVIDE;
                 break;
             case escriptParser.MOD:
-                op = EExpressionOperator.MODULUS;
+                op = EExpressionOperator.MODULO;
                 break;
             case escriptParser.ADD:
                 op = EExpressionOperator.ADD;
@@ -250,10 +261,10 @@ public class ASTBuilder extends escriptBaseVisitor {
     public Object visitExpressionParens(escriptParser.ExpressionParensContext ctx) {
         if (ctx.SUB() != null) {
             return new InvertNode(
-                    (ASTNode) visit(ctx.expression())
+                    (ASTNode) visit(ctx.condition() != null ? ctx.condition() : ctx.expression())
             );
         }
-        return visit(ctx.expression());
+        return visit(ctx.condition() != null ? ctx.condition() : ctx.expression());
     }
 
     @Override
@@ -266,8 +277,11 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitStatementPrint(escriptParser.StatementPrintContext ctx) {
+        ASTNode node = (ASTNode) visit(ctx.condition());
+        if (node.getChildCount() == 1) return new PrintNode((ASTNode) node.getChild(0));
+
         return new PrintNode(
-                (ASTNode) visit(ctx.expression())
+                node
         );
     }
 }
