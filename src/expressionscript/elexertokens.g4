@@ -32,6 +32,7 @@ WHILE: 'while';
 FOR: 'for';
 FUNCTION: 'function';
 RETURN: 'return';
+PRINT: 'print';
 
 // Structure Tokens
 SEP: ',';

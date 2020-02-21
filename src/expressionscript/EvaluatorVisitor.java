@@ -145,6 +145,7 @@ public class EvaluatorVisitor extends ASTVisitor {
 
     @Override
     public Object visitVariable(VariableNode node) throws TypeException {
+        if (!symbolTable.containsKey(node.getPayload())) throw new TypeException("No Variable named X");
         return symbolTable.get(node.getPayload());
     }
 
@@ -162,12 +163,14 @@ public class EvaluatorVisitor extends ASTVisitor {
                     String.format("TypeException: Cannot %s %s and %s! (Statement %s)", op.name(), left, right, currentStatement)
             );
 
-
-
         // Convert to the same class is different before performing operations
         if (left.getClass() != right.getClass()) {
-            if (left instanceof String)
-                right = right.toString();
+            if (left instanceof String) {
+                String temp = right.toString();
+                if (temp.startsWith("\"") && temp.endsWith("\""))
+                    temp = temp.substring(1, temp.length()-1);
+                right = temp;
+            }
             else if (right instanceof String)
                 left = left.toString();
             else if (left instanceof Float && right instanceof Integer)
@@ -180,7 +183,7 @@ public class EvaluatorVisitor extends ASTVisitor {
         switch (op) {
             case ADD:
                 if (left instanceof String) //TODO: Remove quote marks from before appending
-                    return left.toString() + right;
+                    return String.format("\"%s\"", left.toString().substring(1, left.toString().length()-1) + right);
                 if (left instanceof Integer)
                     return (Integer) left + (Integer) right;
                 if (left instanceof Float)
@@ -260,7 +263,7 @@ public class EvaluatorVisitor extends ASTVisitor {
             output += visit(node.getChild(i));
             if (i != node.getChildCount() - 1) output += "\n";
         }
-        return output + "\n" + symbolTable.toString();
+        return symbolTable.toString();
     }
 
     @Override
@@ -272,5 +275,12 @@ public class EvaluatorVisitor extends ASTVisitor {
             }
         }
         return result;
+    }
+
+    @Override
+    public Object visitPrint(PrintNode node) throws TypeException {
+        Object result = visit(node.getChild(0));
+        System.out.println(result);
+        return "";
     }
 }

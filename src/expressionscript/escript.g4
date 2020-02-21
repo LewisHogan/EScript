@@ -12,6 +12,7 @@ statement
     | IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementBranch
     | WHILE condition statement #StatementWhile
     | FOR LPAREN expression EOS condition EOS expression RPAREN statement #StatementFor
+    | PRINT LPAREN expression RPAREN EOS #StatementPrint
     | condition EOS #StatementCondition // TODO: Double check if I ever actually want to use this
     | RETURN expression EOS #StatementReturn; // TODO: Decide if this goes in expression script or not
 

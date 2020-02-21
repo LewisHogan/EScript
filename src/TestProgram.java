@@ -170,7 +170,17 @@ public class TestProgram {
 
 //            String sourceCode = "n = 12;previous = 0;current = 1;index = 1;while (index <= n){current;temp = current;current = current + previous;previous = temp;index = index + 1;}";
 
-            String sourceCode = "name=\"mark\"; age=21*1.35; if (age >= 30) {old=true;} else if (age < 10) {young=true;} if (young || old) { discount=0.5;}else discount=1; price=200*discount;";
+//            String sourceCode = "name=\"mark\"; young=false;old=false;age=21*1.35; if (age >= 30) {old=true;} else if (age < 10) {young=true;} if (young || old) { discount=0.5;}else discount=1; price=200*discount;";
+//            String sourceCode = "name=\"Lewis\";\n" +
+//                    "money=10;\n" +
+//                    "while (money > 1) {\n" +
+//                    "\tmoney = money - 1;\n" +
+//                    "\tprint(money);\n" +
+//                    "}\n" +
+//                    "msg=\"£\" + \"/\" + money;";
+
+            String sourceCode = "n = 12;previous = 0;current = 1;index = 1;while index <= n { print(current);temp = current;current = current + previous;previous = temp;index = index + 1; }";
+
             System.out.println("----------------------------------------------------------");
             System.out.println("INPUT");
             System.out.println("----------------------------------------------------------");

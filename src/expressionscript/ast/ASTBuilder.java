@@ -263,4 +263,11 @@ public class ASTBuilder extends escriptBaseVisitor {
                 (ASTNode) visit(ctx.expression())
         );
     }
+
+    @Override
+    public Object visitStatementPrint(escriptParser.StatementPrintContext ctx) {
+        return new PrintNode(
+                (ASTNode) visit(ctx.expression())
+        );
+    }
 }

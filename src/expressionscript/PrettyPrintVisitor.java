@@ -194,7 +194,12 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
         return String.format("while (%s) %s\n",
                 visit((ASTNode) node.getPayload()),
-                visit(node.getChild(0))
+                visit(node.getChild(0)) + ";"
         );
+    }
+
+    @Override
+    public String visitPrint(PrintNode node) throws TypeException {
+        return String.format("print(%s)", visit(node.getChild(0)));
     }
 }
