@@ -1,5 +1,12 @@
 lexer grammar elexertokens;
 
+// Variable Operations
+ADDSET: ADD SET;
+SUBSET: SUB SET;
+MULSET: MUL SET;
+DIVSET: DIV SET;
+SET: '=';
+
 // Common Expression Operations
 POW: '**';
 MOD: '%';
@@ -7,7 +14,6 @@ MUL: '*';
 DIV: '/';
 ADD: '+';
 SUB: '-';
-SET: '=';
 
 // Boolean Operations
 AND: '&&';

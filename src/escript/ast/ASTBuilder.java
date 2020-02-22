@@ -30,7 +30,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     @Override
     public Object visitStatementBlock(escriptParser.StatementBlockContext ctx) {
         // As we return a List<ASTNode> here, rather than a ASTNode, we cannot use escriptBaseVisitor<ASTNode>
-        return ctx.statement().stream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList());
+        return ctx.statement().stream().map(this::visit).collect(Collectors.toList());
     }
 
     @Override
@@ -111,6 +111,9 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitStatementPrint(escriptParser.StatementPrintContext ctx) {
+        ASTNode node = (ASTNode) visit(ctx.condition());
+        if (node.getChildCount() == 1) return new PrintNode((ASTNode) node.getChild(0));
+
         return new PrintNode((ASTNode) visit(ctx.condition()));
     }
 
@@ -267,5 +270,11 @@ public class ASTBuilder extends escriptBaseVisitor {
     @Override
     public Object visitExpressionString(escriptParser.ExpressionStringContext ctx) {
         return new StringNode(ctx.val.getText());
+    }
+
+    @Override
+    public Object visitExpressionModSetVar(escriptParser.ExpressionModSetVarContext ctx) {
+        System.out.println("OP: " + ctx.op.getText());
+        return super.visitExpressionModSetVar(ctx);
     }
 }

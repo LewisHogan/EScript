@@ -8,10 +8,10 @@ start: statement+;
 // A single major unit of execution.
 statement
 	: LBRACE statement* RBRACE #StatementBlock // Allows us to use multiple statements in control blocks like for loops
-	| ID SET (expression|condition) #StatementAssignment
+	| ID SET (expression|condition) EOS #StatementAssignment
 	| IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementBranch
 	| WHILE condition statement #StatementWhile
-	| FOR statement condition EOS expression statement #StatementFor
+	| FOR LPAREN statement condition EOS expression RPAREN statement #StatementFor
 	| PRINT LPAREN condition RPAREN EOS #StatementPrint
 	| condition EOS #StatementCondition; // Allows conditions (and expressions) to be evaluated without assigning them.
 
@@ -33,6 +33,7 @@ expression
 	: left=expression op=POW right=expression #ExpressionBinary
 	| left=expression op=(MUL|DIV|MOD) right=expression #ExpressionBinary
 	| left=expression op=(ADD|SUB) right=expression #ExpressionBinary
+	| left=ID op=(ADD|SUB|MUL|DIV) SET right=expression #ExpressionModSetVar
 	| (SUB|NOT)? val=(ID|NUMBER) #ExpressionValue
 	| (SUB|NOT)? LPAREN (expression|condition) RPAREN #ExpressionParenthesis
 	| ID SET expression #ExpressionAssignment // This is needed if we plan to support inline assignments a = (b = 2) + 1

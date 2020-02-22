@@ -64,6 +64,7 @@ public class ASTNode<E> implements Tree {
     }
 
     public void addChild(ASTNode child) {
+        if (child == null) return;
         children.add(child);
         child.setParent(this);
     }
