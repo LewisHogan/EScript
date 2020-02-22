@@ -1,7 +1,7 @@
-package ast.nodes.statement;
+package escript.ast.nodes.statement;
 
-import ast.nodes.ASTNode;
-import ast.nodes.values.VariableNode;
+import escript.ast.nodes.ASTNode;
+import escript.ast.nodes.values.VariableNode;
 
 /**
  * Represents a variable being assigned a value.

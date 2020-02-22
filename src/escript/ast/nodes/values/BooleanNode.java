@@ -1,6 +1,6 @@
-package ast.nodes.values;
+package escript.ast.nodes.values;
 
-import ast.nodes.ASTNode;
+import escript.ast.nodes.ASTNode;
 
 /**
  * Represents a Boolean primitive.

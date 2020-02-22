@@ -1,6 +1,6 @@
-package ast.nodes.condition;
+package escript.ast.nodes.condition;
 
-import ast.nodes.ASTNode;
+import escript.ast.nodes.ASTNode;
 
 import java.util.List;
 

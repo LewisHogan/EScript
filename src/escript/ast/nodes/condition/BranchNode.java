@@ -1,6 +1,6 @@
-package ast.nodes.condition;
+package escript.ast.nodes.condition;
 
-import ast.nodes.ASTNode;
+import escript.ast.nodes.ASTNode;
 
 import java.util.List;
 
@@ -10,9 +10,10 @@ import java.util.List;
 public class BranchNode extends ASTNode<String> {
     /**
      * Creates a Branch node to represent the various pathways available.
-     * @param ifNode The If pathway.
+     *
+     * @param ifNode      The If pathway.
      * @param elseIfNodes The else if pathways.
-     * @param elseNodes The statements to execute in the event none of the other pathways being chosen.
+     * @param elseNodes   The statements to execute in the event none of the other pathways being chosen.
      */
     public BranchNode(IfNode ifNode, List<IfNode> elseIfNodes, List<ASTNode> elseNodes) {
         addChild(ifNode);

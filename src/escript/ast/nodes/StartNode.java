@@ -1,4 +1,4 @@
-package ast.nodes;
+package escript.ast.nodes;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package ast.nodes.condition;
+package escript.ast.nodes.condition;
 
-import ast.nodes.ASTNode;
+import escript.ast.nodes.ASTNode;
 
 /**
  * Represents an individual condition
@@ -19,6 +19,16 @@ public class ConditionNode extends ASTNode<EComparisonOperator> {
         addChild(left);
         addChild(right);
         setPayload(operator);
+    }
+
+    /**
+     * Creates a Condition node to represent a condition being described.
+     *
+     * @param value The node that is being evaluted for a truthy or falsey value.
+     */
+    public ConditionNode(ASTNode value) {
+        setPayload(EComparisonOperator.VALUE);
+        addChild(value);
     }
 
     @Override

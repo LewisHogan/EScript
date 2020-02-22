@@ -1,4 +1,4 @@
-package ast.nodes.condition;
+package escript.ast.nodes.condition;
 
 /**
  * Represents Comparison Operators.
@@ -6,10 +6,10 @@ package ast.nodes.condition;
 public enum EComparisonOperator {
     EQUALS("==", 3),
     NOT_EQUALS("!=", 3),
-    GREATER_THEN(">", 2),
-    GREATER_THEN_OR_EQUALS(">=", 2),
-    LESS_THEN("<", 2),
-    LESS_THEN_OR_EQUALS("<=", 2),
+    GREATER_THAN(">", 2),
+    GREATER_THAN_OR_EQUALS(">=", 2),
+    LESS_THAN("<", 2),
+    LESS_THAN_OR_EQUALS("<=", 2),
     AND("&&", 1),
     OR("||", 1),
     VALUE("", 0);
@@ -33,6 +33,11 @@ public enum EComparisonOperator {
         return symbol;
     }
 
+    /**
+     * Returns if the current operation has priority.
+     * @param other The other expression operator to compare.
+     * @return If the current operation is a higher priority than the other.
+     */
     public boolean isHigherPriority(EComparisonOperator other) {
         return priority > other.priority;
     }
