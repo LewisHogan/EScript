@@ -16,23 +16,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPrettyPrintVisitor {
+public class TestPythonTranspilerVisitor {
 
-    public static final int PRETTY_PRINT_TESTS = 5;
+    public static final int PYTHON_TESTS = 4;
 
     private static List<ASTNode> trees;
+
+    static ASTNode createAST(String sourceCode) {
+        return createAST(CharStreams.fromString(sourceCode));
+    }
 
     static ASTNode createAST(CharStream sourceCode) {
         escriptLexer lexer = new escriptLexer(sourceCode);
         escriptParser parser = new escriptParser(new CommonTokenStream(lexer));
-        return (ASTNode) new ASTBuilder().visit(parser.start());
+        return new ASTBuilder().visit(parser.start());
     }
 
     @BeforeAll
     static void GenerateASTsFromSourceFiles() {
         trees = new ArrayList<>();
-        for (int i = 0; i < PRETTY_PRINT_TESTS; i++) {
-            String fileToLoad = String.format("tests/prettyprint/input_%d.txt", i);
+        for (int i = 0; i < PYTHON_TESTS; i++) {
+            String fileToLoad = String.format("tests/pythoncompiler/input_%d.txt", i);
             try {
                 System.out.println(String.format("Adding test file tree from %s...", fileToLoad));
                 trees.add(createAST(CharStreams.fromFileName(fileToLoad)));
@@ -44,15 +48,13 @@ public class TestPrettyPrintVisitor {
 
     @Test
     void TestGenASTMatchesExisting() {
-        OldPrettyPrintVisitor prettyprinter = new OldPrettyPrintVisitor();
+        PythonTranspilerVisitor transpiler = new PythonTranspilerVisitor();
 
         int testNumber = 0;
-        String formattedSource = "";
+        String transpiledSource = "";
         for (ASTNode root : trees) {
-            ASTNode formattedRoot = null;
             try {
-                formattedSource = prettyprinter.visit(root);
-                formattedRoot = createAST(CharStreams.fromString(formattedSource));
+                transpiledSource = transpiler.visit(root);
             } catch (InvalidIDException | InvalidOperationException | UndefinedVariableException err) {
                 err.printStackTrace();
                 Assertions.fail(err.getMessage());
@@ -61,10 +63,10 @@ public class TestPrettyPrintVisitor {
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(String.format("OUTPUT: %d", testNumber));
             System.out.println("-----------------------------------------------------------------------");
-            System.out.println(formattedSource);
+            System.out.println(transpiledSource);
             System.out.println("-----------------------------------------------------------------------");
-            System.out.printf("Checking test %s output matches original input in tree...", testNumber);
-            Assertions.assertEquals(root.toStringTree(), formattedRoot.toStringTree());
+            System.out.printf("Checking test %s output matches expected...", testNumber);
+            System.out.println("TEST NOT YET IMPLEMENTED");
             System.out.println("PASSED");
             testNumber++;
         }

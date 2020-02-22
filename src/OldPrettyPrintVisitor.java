@@ -15,7 +15,7 @@ import escript.ast.nodes.values.*;
 /**
  * Visits an abstract syntax tree and creates nicely formatted code from it.
  */
-public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
+public class OldPrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
 
     private int indentationLevel = 0;
 
@@ -38,7 +38,10 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
      * @return If the node type should have a semi colon after the end
      */
     private boolean isSemiColonNeeded(ASTNode node) {
-        return !(node instanceof IfNode || node instanceof WhileNode || node instanceof ForNode || node instanceof BranchNode);
+        return !(node instanceof IfNode || node instanceof WhileNode
+                || node instanceof ForNode || node instanceof BranchNode
+                || node instanceof BlockNode
+        );
     }
 
     @Override
@@ -95,6 +98,15 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
     }
 
     @Override
+    protected String visitBlock(BlockNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        String body = "";
+        for (int i = 0; i < node.getChildCount(); i++) {
+            body += visit((ASTNode) node.getChild(i));
+        }
+        return body;
+    }
+
+    @Override
     protected String visitCondition(ConditionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         if (node.getChildCount() == 1) return String.format("%s", visit((ASTNode) node.getChild(0)));
 
@@ -106,7 +118,7 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
             // If the parent has an operator which is higher priority, we need to print parenthesis, or order priority
             // will be broken
             boolean needsParenthesis = ((EComparisonOperator) node.getParent().getPayload()).
-                    isHigherPriority((EComparisonOperator) node.getPayload());
+                    isPriority((EComparisonOperator) node.getPayload());
 
             if (needsParenthesis)
                 return String.format("(%s)", output);
@@ -167,7 +179,7 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
         if (node.getParent() instanceof ExpressionNode) {
             // If we have a parent with a higher priority, then we need to put parenthesis in order to keep order of
             // operations the same
-            boolean needsParenthesis = ((EExpressionOperator) node.getParent().getPayload()).isHigherPriority(
+            boolean needsParenthesis = ((EExpressionOperator) node.getParent().getPayload()).isPriority(
                     (EExpressionOperator) node.getPayload()
             );
 
@@ -180,16 +192,17 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
 
     @Override
     protected String visitFor(ForNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        boolean hasMultipleStatements = node.getChildCount() > 1;
+        boolean hasMultipleStatements = node.getChild(0) instanceof BlockNode;
         ForPayload payload = (ForPayload) node.getPayload();
 
         if (hasMultipleStatements) {
+            BlockNode block = (BlockNode) node.getChild(0);
             String children = "";
-            for (int i = 0; i < node.getChildCount(); i++) {
+            for (int i = 0; i < block.getChildCount(); i++) {
                 // TODO: May need to check if children are things which don't need ;, like while loops or if nodes
-                ASTNode child = (ASTNode) node.getChild(i);
+                ASTNode child = (ASTNode) block.getChild(i);
                 children += indent(++indentationLevel) + visit(child) + (isSemiColonNeeded(child) ? ";" : "");
-                if (i < node.getChildCount() - 1) children += "\n";
+                if (i < block.getChildCount() - 1) children += "\n";
                 indentationLevel--;
             }
 
@@ -205,7 +218,7 @@ public class PrettyPrintVisitor extends escript.ast.ASTVisitor<String> {
 
         ASTNode child = (ASTNode) node.getChild(0);
 
-        return String.format("%sfor (%s; %s; %s) %s;\n",
+        return String.format("%sfor (%s; %s; %s) %s\n",
                 indent(indentationLevel),
                 visit(payload.getInitial()),
                 visit(payload.getCondition()),

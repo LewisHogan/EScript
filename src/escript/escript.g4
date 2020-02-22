@@ -33,7 +33,7 @@ expression
 	: left=expression op=POW right=expression #ExpressionBinary
 	| left=expression op=(MUL|DIV|MOD) right=expression #ExpressionBinary
 	| left=expression op=(ADD|SUB) right=expression #ExpressionBinary
-	| left=ID op=(ADD|SUB|MUL|DIV) SET right=expression #ExpressionModSetVar
+	| left=ID op=(MULSET|DIVSET|MODSET|ADDSET|SUBSET) right=expression #ExpressionModSetVar
 	| (SUB|NOT)? val=(ID|NUMBER) #ExpressionValue
 	| (SUB|NOT)? LPAREN (expression|condition) RPAREN #ExpressionParenthesis
 	| ID SET expression #ExpressionAssignment // This is needed if we plan to support inline assignments a = (b = 2) + 1

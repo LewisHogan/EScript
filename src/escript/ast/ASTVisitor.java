@@ -21,6 +21,7 @@ public abstract class ASTVisitor<E> {
     public E visit(ASTNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         if (node instanceof StartNode) return visitStart((StartNode) node);
         if (node instanceof BranchNode) return visitBranch((BranchNode) node);
+        if (node instanceof BlockNode) return visitBlock((BlockNode) node);
         if (node instanceof ConditionNode) return visitCondition((ConditionNode) node);
         if (node instanceof IfNode) return visitIf((IfNode) node);
         if (node instanceof AssignmentNode) return visitAssignment((AssignmentNode) node);
@@ -42,6 +43,9 @@ public abstract class ASTVisitor<E> {
             UndefinedVariableException, InvalidIDException;
 
     protected abstract E visitBranch(BranchNode node) throws InvalidOperationException,
+            UndefinedVariableException, InvalidIDException;
+
+    protected abstract E visitBlock(BlockNode node) throws InvalidOperationException,
             UndefinedVariableException, InvalidIDException;
 
     protected abstract E visitCondition(ConditionNode node) throws InvalidOperationException,

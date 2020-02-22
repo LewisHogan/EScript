@@ -5,7 +5,6 @@ import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
 import escript.escriptLexer;
 import escript.escriptParser;
-import javafx.scene.control.TreeView;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -14,7 +13,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class EScriptEditor {
 
@@ -85,8 +83,7 @@ public class EScriptEditor {
             ASTContainer.add(
                     treeViewer
             );
-            treeViewer.revalidate();
-            ASTContainer.validate();
+            frame.revalidate();
         }
 
     }
@@ -105,10 +102,10 @@ public class EScriptEditor {
     private JSplitPane evalCtrlPane;
     private JSplitPane evalLogMapPane;
 
-    private PrettyPrintVisitor prettyPrinter;
+    private OldPrettyPrintVisitor prettyPrinter;
 
     public EScriptEditor() {
-        prettyPrinter = new PrettyPrintVisitor();
+        prettyPrinter = new OldPrettyPrintVisitor();
 
         frame = new JFrame("EScript Editor");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

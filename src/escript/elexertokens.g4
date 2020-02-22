@@ -5,6 +5,8 @@ ADDSET: ADD SET;
 SUBSET: SUB SET;
 MULSET: MUL SET;
 DIVSET: DIV SET;
+MODSET: DIV SET;
+POWSET: DIV SET;
 SET: '=';
 
 // Common Expression Operations

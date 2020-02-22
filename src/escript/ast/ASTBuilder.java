@@ -19,24 +19,24 @@ import java.util.stream.Collectors;
 /**
  * Class to construct an Abstract Syntax Tree from the Concrete Syntax Tree produced by Antlr.
  */
-public class ASTBuilder extends escriptBaseVisitor {
+public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     @Override
-    public Object visitStart(escriptParser.StartContext ctx) {
+    public ASTNode visitStart(escriptParser.StartContext ctx) {
         return new StartNode(
                 ctx.statement().stream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList())
         );
     }
 
     @Override
-    public Object visitStatementBlock(escriptParser.StatementBlockContext ctx) {
+    public BlockNode visitStatementBlock(escriptParser.StatementBlockContext ctx) {
         // As we return a List<ASTNode> here, rather than a ASTNode, we cannot use escriptBaseVisitor<ASTNode>
-        return ctx.statement().stream().map(this::visit).collect(Collectors.toList());
+        return new BlockNode(ctx.statement().stream().map(this::visit).collect(Collectors.toList()));
     }
 
     @Override
-    public Object visitStatementAssignment(escriptParser.StatementAssignmentContext ctx) {
+    public AssignmentNode visitStatementAssignment(escriptParser.StatementAssignmentContext ctx) {
         return new AssignmentNode(new VariableNode(ctx.ID().getText()),
-                (ASTNode) visit(ctx.condition() != null ? ctx.condition() : ctx.expression())
+                visit(ctx.condition() != null ? ctx.condition() : ctx.expression())
         );
     }
 
@@ -69,7 +69,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitStatementBranch(escriptParser.StatementBranchContext ctx) {
+    public BranchNode visitStatementBranch(escriptParser.StatementBranchContext ctx) {
 
         List<IfNode> elseIfNodes = new ArrayList<>();
         for (int i = 0; i < ctx.ELSEIF().size(); i++)
@@ -87,7 +87,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitStatementWhile(escriptParser.StatementWhileContext ctx) {
+    public WhileNode visitStatementWhile(escriptParser.StatementWhileContext ctx) {
         List whileStatements = ensureList(visit(ctx.statement()));
 
         return new WhileNode(
@@ -99,7 +99,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitStatementFor(escriptParser.StatementForContext ctx) {
+    public ForNode visitStatementFor(escriptParser.StatementForContext ctx) {
         List forStatements = ensureList(visit(ctx.statement(1)));
         return new ForNode(
                 (AssignmentNode) visit(ctx.statement(0)),
@@ -110,7 +110,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitStatementPrint(escriptParser.StatementPrintContext ctx) {
+    public PrintNode visitStatementPrint(escriptParser.StatementPrintContext ctx) {
         ASTNode node = (ASTNode) visit(ctx.condition());
         if (node.getChildCount() == 1) return new PrintNode((ASTNode) node.getChild(0));
 
@@ -118,12 +118,12 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitStatementCondition(escriptParser.StatementConditionContext ctx) {
-        return visit(ctx.condition());
+    public ConditionNode visitStatementCondition(escriptParser.StatementConditionContext ctx) {
+        return (ConditionNode) visit(ctx.condition());
     }
 
     @Override
-    public Object visitConditionComparison(escriptParser.ConditionComparisonContext ctx) {
+    public ConditionNode visitConditionComparison(escriptParser.ConditionComparisonContext ctx) {
         EComparisonOperator op = null;
         switch (ctx.op.getType()) {
             case escriptParser.EQUALS:
@@ -154,17 +154,17 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitConditionExpression(escriptParser.ConditionExpressionContext ctx) {
+    public ConditionNode visitConditionExpression(escriptParser.ConditionExpressionContext ctx) {
         return new ConditionNode((ASTNode) visit(ctx.expression()));
     }
 
     @Override
-    public Object visitConditionInverted(escriptParser.ConditionInvertedContext ctx) {
+    public ConditionNode visitConditionInverted(escriptParser.ConditionInvertedContext ctx) {
         return new ConditionNode(new InversionNode((ASTNode) visit(ctx.condition())));
     }
 
     @Override
-    public Object visitConditionLogic(escriptParser.ConditionLogicContext ctx) {
+    public ConditionNode visitConditionLogic(escriptParser.ConditionLogicContext ctx) {
         EComparisonOperator op = null;
         switch (ctx.op.getType()) {
             case escriptParser.EQUALS:
@@ -189,12 +189,12 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitConditionParenthesis(escriptParser.ConditionParenthesisContext ctx) {
-        return visit(ctx.condition());
+    public ConditionNode visitConditionParenthesis(escriptParser.ConditionParenthesisContext ctx) {
+        return (ConditionNode) visit(ctx.condition());
     }
 
     @Override
-    public Object visitExpressionBinary(escriptParser.ExpressionBinaryContext ctx) {
+    public ExpressionNode visitExpressionBinary(escriptParser.ExpressionBinaryContext ctx) {
         EExpressionOperator op = null;
         switch (ctx.op.getType()) {
             case escriptParser.POW:
@@ -225,7 +225,7 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitExpressionValue(escriptParser.ExpressionValueContext ctx) {
+    public ASTNode visitExpressionValue(escriptParser.ExpressionValueContext ctx) {
         ASTNode node = null;
         if (ctx.ID() != null) {
             node = new VariableNode(ctx.val.getText());
@@ -247,13 +247,13 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitExpressionBoolean(escriptParser.ExpressionBooleanContext ctx) {
+    public ASTNode visitExpressionBoolean(escriptParser.ExpressionBooleanContext ctx) {
         BooleanNode node = new BooleanNode(ctx.val.getType() == escriptParser.TRUE);
         return ctx.NOT() != null ? new InversionNode(node) : node;
     }
 
     @Override
-    public Object visitExpressionParenthesis(escriptParser.ExpressionParenthesisContext ctx) {
+    public ASTNode visitExpressionParenthesis(escriptParser.ExpressionParenthesisContext ctx) {
         ASTNode node = (ASTNode) visit(ctx.condition() != null ? ctx.condition() : ctx.expression());
         if (ctx.SUB() != null || ctx.NOT() != null) {
             return new InversionNode(node);
@@ -263,18 +263,40 @@ public class ASTBuilder extends escriptBaseVisitor {
     }
 
     @Override
-    public Object visitExpressionAssignment(escriptParser.ExpressionAssignmentContext ctx) {
+    public AssignmentNode visitExpressionAssignment(escriptParser.ExpressionAssignmentContext ctx) {
         return new AssignmentNode(new VariableNode(ctx.ID().getText()), (ASTNode) visit(ctx.expression()));
     }
 
     @Override
-    public Object visitExpressionString(escriptParser.ExpressionStringContext ctx) {
+    public StringNode visitExpressionString(escriptParser.ExpressionStringContext ctx) {
         return new StringNode(ctx.val.getText());
     }
 
     @Override
-    public Object visitExpressionModSetVar(escriptParser.ExpressionModSetVarContext ctx) {
-        System.out.println("OP: " + ctx.op.getText());
-        return super.visitExpressionModSetVar(ctx);
+    public ASTNode visitExpressionModSetVar(escriptParser.ExpressionModSetVarContext ctx) {
+
+        ExpressionNode node = null;
+        switch (ctx.op.getType()) {
+            case escriptParser.ADDSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.ADD, visit(ctx.right));
+                break;
+            case escriptParser.SUBSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.SUBTRACT, visit(ctx.right));
+                break;
+            case escriptParser.MULSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MULTIPLY, visit(ctx.right));
+                break;
+            case escriptParser.DIVSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.DIVIDE, visit(ctx.right));
+                break;
+            case escriptParser.POW:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.POWER, visit(ctx.right));
+                break;
+            case escriptParser.MOD:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MODULO, visit(ctx.right));
+                break;
+        }
+
+        return new AssignmentNode(new VariableNode(ctx.left.getText()), node);
     }
 }

@@ -1,0 +1,8 @@
+name = "Lewis";
+age = 22;
+for (i = 0; (i + 18) < age; i += 1) {
+	print("Year of being an adult: " + (i+1));
+	if ((i+18) == age)
+		print("Congraulations");
+}
+print("PROGRAM FINISH");

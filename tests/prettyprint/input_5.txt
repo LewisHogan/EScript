@@ -1,0 +1,5 @@
+ name="lewis";
+ age=2020-1997;
+ money = age * 365;
+ is_bankrupt = money <= 0;
+ if (is_bankrupt) msg="Empty Account"; else if (money > 10000) {msg="£MAX";} else msg="£" + (money/1.5);

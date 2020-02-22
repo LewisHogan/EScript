@@ -36,9 +36,9 @@ public enum EComparisonOperator {
     /**
      * Returns if the current operation has priority.
      * @param other The other expression operator to compare.
-     * @return If the current operation is a higher priority than the other.
+     * @return If the current operation is a higher or equal priority than the other.
      */
-    public boolean isHigherPriority(EComparisonOperator other) {
-        return priority > other.priority;
+    public boolean isPriority(EComparisonOperator other) {
+        return priority >= other.priority;
     }
 }
