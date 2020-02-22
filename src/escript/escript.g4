@@ -12,6 +12,7 @@ statement
 	| IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementBranch
 	| WHILE condition statement #StatementWhile
 	| FOR statement condition EOS expression statement #StatementFor
+	| PRINT LPAREN condition RPAREN EOS #StatementPrint
 	| condition EOS #StatementCondition; // Allows conditions (and expressions) to be evaluated without assigning them.
 
 // A condition is something that can ultimately evaluate to either TRUE or FALSE.
@@ -35,5 +36,5 @@ expression
 	| (SUB|NOT)? val=(ID|NUMBER) #ExpressionValue
 	| (SUB|NOT)? LPAREN (expression|condition) RPAREN #ExpressionParenthesis
 	| ID SET expression #ExpressionAssignment // This is needed if we plan to support inline assignments a = (b = 2) + 1
-	| val=(TRUE|FALSE) #ExpressionBoolean
+	| (NOT)? val=(TRUE|FALSE) #ExpressionBoolean
 	| val=STRING #ExpressionString;

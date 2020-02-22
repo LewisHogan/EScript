@@ -1,0 +1,14 @@
+name="lewis";
+age=22;
+money=age*100;
+if (age > 2000)
+	print("You are rich");
+	else if (age > 100) {
+		print("You can afford food");
+		print("You can afford food");
+		}
+	else print("You need help");
+	test = !false;
+	if (!test) {
+		print(-5);
+	}

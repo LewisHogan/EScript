@@ -20,11 +20,19 @@ public class ASTNode<E> implements Tree {
     private ASTNode parent;
     private List<ASTNode> children = new ArrayList<>();
 
+    /**
+     * Creates an Abstract Syntax Tree node, something that represents a single element (e.g. a variable, a string).
+     *
+     * @param children any child nodes of the current node.
+     */
     public ASTNode(List<ASTNode> children) {
         if (children != null)
             children.forEach(this::addChild);
     }
 
+    /**
+     * Creates an Abstract Syntax Tree node, something that represents a single element (e.g. a variable, a string).
+     */
     public ASTNode() {
 
     }
@@ -57,6 +65,7 @@ public class ASTNode<E> implements Tree {
 
     public void addChild(ASTNode child) {
         children.add(child);
+        child.setParent(this);
     }
 
     public void setPayload(E payload) {
@@ -65,5 +74,10 @@ public class ASTNode<E> implements Tree {
 
     public void setParent(ASTNode parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String toString() {
+        return getPayload().toString();
     }
 }

@@ -21,4 +21,8 @@ public class WhilePayload {
     public String toString() {
         return String.format("while %s", condition);
     }
+
+    public ConditionNode getCondition() {
+        return condition;
+    }
 }

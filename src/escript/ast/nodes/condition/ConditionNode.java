@@ -34,7 +34,7 @@ public class ConditionNode extends ASTNode<EComparisonOperator> {
     @Override
     public String toString() {
         // We keep this statement for situations like if (my_boolean_here), where the comparison is unary.
-        if (getChildCount() == 1) getChild(0).toString();
+        if (getChildCount() == 1) return getChild(0).toString();
 
         return String.format("%s %s %s", getChild(0), getPayload(), getChild(1));
     }

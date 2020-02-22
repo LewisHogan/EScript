@@ -23,14 +23,14 @@ public class ASTBuilder extends escriptBaseVisitor {
     @Override
     public Object visitStart(escriptParser.StartContext ctx) {
         return new StartNode(
-                ctx.statement().parallelStream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList())
+                ctx.statement().stream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList())
         );
     }
 
     @Override
     public Object visitStatementBlock(escriptParser.StatementBlockContext ctx) {
         // As we return a List<ASTNode> here, rather than a ASTNode, we cannot use escriptBaseVisitor<ASTNode>
-        return ctx.statement().parallelStream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList());
+        return ctx.statement().stream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList());
     }
 
     @Override
@@ -107,6 +107,11 @@ public class ASTBuilder extends escriptBaseVisitor {
                 (ASTNode) visit(ctx.expression()),
                 forStatements
         );
+    }
+
+    @Override
+    public Object visitStatementPrint(escriptParser.StatementPrintContext ctx) {
+        return new PrintNode((ASTNode) visit(ctx.condition()));
     }
 
     @Override
@@ -240,7 +245,8 @@ public class ASTBuilder extends escriptBaseVisitor {
 
     @Override
     public Object visitExpressionBoolean(escriptParser.ExpressionBooleanContext ctx) {
-        return new BooleanNode(ctx.val.getType() == escriptParser.TRUE);
+        BooleanNode node = new BooleanNode(ctx.val.getType() == escriptParser.TRUE);
+        return ctx.NOT() != null ? new InversionNode(node) : node;
     }
 
     @Override

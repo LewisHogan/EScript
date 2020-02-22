@@ -14,6 +14,6 @@ public class StringNode extends ASTNode<String> {
      * @param value The string contents.
      */
     public StringNode(String value) {
-        setPayload(String.format("\"%s\"", value));
+        setPayload(value);
     }
 }
