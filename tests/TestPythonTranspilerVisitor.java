@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TestPythonTranspilerVisitor {
 
-    public static final int PYTHON_TESTS = 4;
+    public static final int PYTHON_TESTS = 5;
 
     private static List<ASTNode> trees;
 
@@ -60,14 +60,14 @@ public class TestPythonTranspilerVisitor {
                 Assertions.fail(err.getMessage());
             }
 
+            System.out.println(String.format("INPUT: %d", testNumber));
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println(trees.get(testNumber).toStringTree());
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(String.format("OUTPUT: %d", testNumber));
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(transpiledSource);
             System.out.println("-----------------------------------------------------------------------");
-            System.out.printf("Checking test %s output matches expected...", testNumber);
-            System.out.println("TEST NOT YET IMPLEMENTED");
-            System.out.println("PASSED");
             testNumber++;
         }
     }

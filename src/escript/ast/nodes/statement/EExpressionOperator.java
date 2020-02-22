@@ -9,7 +9,7 @@ public enum EExpressionOperator {
     DIVIDE("/", 2),
     MULTIPLY("*", 2),
     POWER("**", 3),
-    MODULO("%", 3);
+    MODULO("%", 2);
 
     private String symbol;
     private int priority;

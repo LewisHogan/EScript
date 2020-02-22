@@ -116,7 +116,17 @@ public class PythonTranspilerVisitor extends ASTVisitor<String> {
         }
 
         if (node.getChildCount() == 1) return String.format("%s", visit((ASTNode) node.getChild(0)));
-        return String.format("%s %s %s", visit((ASTNode) node.getChild(0)), comparisonSymbol, visit((ASTNode) node.getChild(1)));
+
+        ASTNode left = (ASTNode) node.getChild(0);
+        ASTNode right = (ASTNode) node.getChild(1);
+
+        ASTNode parent = (ASTNode) node.getParent();
+        if (parent != null && (parent.getPayload() instanceof EComparisonOperator)) {
+            // If parent is higher or equal priority, wrap in parenthesis
+            if (((EComparisonOperator) parent.getPayload()).isPriority((EComparisonOperator) node.getPayload()))
+                return String.format("(%s %s %s)", visit(left), comparisonSymbol, right);
+        }
+        return String.format("%s %s %s", visit(left), comparisonSymbol, visit(right));
     }
 
     @Override
@@ -127,8 +137,13 @@ public class PythonTranspilerVisitor extends ASTVisitor<String> {
         for (int i = 0; i < node.getChildCount(); i++) {
             // TODO: FIX
             // I assume this will break with multistatement ifs
-            String child = visit(new BlockNode(Arrays.asList((ASTNode) node.getChild(i))));
-            body += child;
+            // I was correct
+            ASTNode child = (ASTNode) node.getChild(i);
+            if (child instanceof BlockNode)
+                body += visit(child);
+            else
+                body += visit(new BlockNode(Arrays.asList(child)));
+
 //            body += visit((ASTNode) node.getChild(i));
             if (i != node.getChildCount() - 1) body += "\n";
         }
@@ -176,7 +191,7 @@ public class PythonTranspilerVisitor extends ASTVisitor<String> {
         ASTNode parent = (ASTNode) node.getParent();
         if (parent != null && (parent.getPayload() instanceof EExpressionOperator)) {
             // If parent is higher or equal priority, wrap in parenthesis
-            if (((EExpressionOperator) node.getPayload()).isPriority((EExpressionOperator) parent.getPayload()))
+            if (((EExpressionOperator) parent.getPayload()).isPriority((EExpressionOperator) node.getPayload()))
                 return String.format("(%s %s %s)", leftStr, expressionSymbol, rightStr);
         }
 
