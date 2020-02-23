@@ -13,6 +13,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Standalone program that allows compiling EScript code into Python 3.
+ */
 public class ECompiler {
 
     private static ASTNode createAST(CharStream source) {
@@ -43,6 +46,7 @@ public class ECompiler {
 
         if (args.length == 2) {
             // Need to specify UTF8 otherwise characters like the £ symbol don't seem to be encoded correctly?
+            // Unknown bug seems to be
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), StandardCharsets.UTF_8))) {
                 writer.write(compile(args[0]));
             } catch (FileNotFoundException e) {

@@ -28,7 +28,12 @@ public class EScriptEditor {
 
             evalButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    ASTNode tree = createAST(sourceCodeInput.getText());
+                    String text = sourceCodeInput.getText();
+                    if (text.trim().equals("")) {
+                        output.setText("No input provided");
+                        return;
+                    }
+                    ASTNode tree = createAST(text);
                     updateAST(tree);
                     try {
                         EvaluationOutput evaluationOutput = (EvaluationOutput) new EvaluatorVisitor().visit(tree);
@@ -42,7 +47,12 @@ public class EScriptEditor {
 
             prettyButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    ASTNode tree = createAST(sourceCodeInput.getText());
+                    String text = sourceCodeInput.getText();
+                    if (text.trim().equals("")) {
+                        output.setText("No input provided");
+                        return;
+                    }
+                    ASTNode tree = createAST(text);
                     updateAST(tree);
                     try {
                         output.setText(new PrettyPrintVisitor().visit(tree));
@@ -54,7 +64,12 @@ public class EScriptEditor {
 
             pythonButton.addActionListener(e -> {
                 SwingUtilities.invokeLater(() -> {
-                    ASTNode tree = createAST(sourceCodeInput.getText());
+                    String text = sourceCodeInput.getText();
+                    if (text.trim().equals("")) {
+                        output.setText("No input provided");
+                        return;
+                    }
+                    ASTNode tree = createAST(text);
                     updateAST(tree);
                     try {
                         output.setText(new PythonCompilerVisitor().visit(tree));
@@ -112,7 +127,7 @@ public class EScriptEditor {
         frame.getContentPane().setLayout(new GridLayout(2, 2));
         frame.getContentPane().add(new JScrollPane(sourceCodeInput));
         frame.getContentPane().add(new JScrollPane(output));
-        frame.getContentPane().add(astContainer);
+        frame.getContentPane().add(new JScrollPane(astContainer));
         frame.getContentPane().add(new JScrollPane(controlsPanel));
 
         frame.pack();
@@ -129,7 +144,7 @@ public class EScriptEditor {
     void updateAST(ASTNode tree) {
         astContainer.removeAll();
         TreeViewer treeViewer = new TreeViewer(Arrays.asList(""), tree);
-        astContainer.add(new JScrollPane(treeViewer));
+        astContainer.add(treeViewer);
         frame.revalidate();
         frame.repaint();
     }

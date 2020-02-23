@@ -227,17 +227,24 @@ public class EvaluatorVisitor extends ASTVisitor {
                     return (Float) left * (Float) right;
                 break;
             case DIVIDE:
-                if ((Integer) right == 0) throw new InvalidOperationException("Cannot be divide by 0");
-                if (left instanceof Integer)
+                if (left instanceof Integer) {
+                    if ((Integer) right == 0) throw new InvalidOperationException("Cannot be divide by 0");
                     return (Integer) left / (Integer) right;
-                if (left instanceof Float)
+                }
+                if (left instanceof Float) {
+                    if ((Float) right == 0) throw new InvalidOperationException("Cannot be divide by 0");
                     return (Float) left / (Float) right;
+                }
                 break;
             case MODULO:
-                if (left instanceof Integer)
+                if (left instanceof Integer) {
+                    if ((Integer) right == 0) throw new InvalidOperationException("Cannot be mod by 0");
                     return (Integer) left % (Integer) right;
-                if (left instanceof Float)
+                }
+                if (left instanceof Float) {
+                    if ((Float) right == 0) throw new InvalidOperationException("Cannot be mod by 0");
                     return (Float) left % (Float) right;
+                }
                 break;
             case POWER:
                 return Math.pow((Float) left, (Float) right);
