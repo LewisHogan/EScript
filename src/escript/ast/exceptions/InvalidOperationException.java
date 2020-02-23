@@ -12,4 +12,8 @@ public class InvalidOperationException extends Exception {
     public InvalidOperationException(EComparisonOperator operation) {
         super(String.format("Invalid Operation Exception: %s", operation));
     }
+
+    public InvalidOperationException(String message) {
+        super("Invalid Operation Exception: " + message);
+    }
 }

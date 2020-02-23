@@ -1,3 +1,5 @@
+package escript;
+
 import escript.ast.ASTVisitor;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Transpiles EScript into Python code.
+ * Formats provided EScript code.
  */
 public class PrettyPrintVisitor extends ASTVisitor<String> {
 
@@ -223,8 +225,7 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
             ASTNode child = (ASTNode) node.getChild(i);
             if (child instanceof BlockNode)
                 body += visit(child) + endStatement(child) + "\n";
-            else
-            {
+            else {
                 indentationLevel++;
                 body += indent() + visit(child) + endStatement(child) + "\n";
                 indentationLevel--;

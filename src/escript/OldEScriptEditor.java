@@ -1,10 +1,10 @@
+package escript;
+
 import escript.ast.ASTBuilder;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
-import escript.escriptLexer;
-import escript.escriptParser;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;

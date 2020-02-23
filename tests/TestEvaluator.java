@@ -1,11 +1,9 @@
-import escript.PythonTranspilerVisitor;
+import escript.*;
 import escript.ast.ASTBuilder;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
-import escript.escriptLexer;
-import escript.escriptParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,10 +14,11 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class TestPythonTranspilerVisitor {
+public class TestEvaluator {
 
-    public static final int PYTHON_TESTS = 5;
+    public static final int EVALUATOR_TESTS = 1;
 
     private static List<ASTNode> trees;
 
@@ -36,8 +35,8 @@ public class TestPythonTranspilerVisitor {
     @BeforeAll
     static void GenerateASTsFromSourceFiles() {
         trees = new ArrayList<>();
-        for (int i = 0; i < PYTHON_TESTS; i++) {
-            String fileToLoad = String.format("tests/pythoncompiler/input_%d.txt", i);
+        for (int i = 0; i < EVALUATOR_TESTS; i++) {
+            String fileToLoad = String.format("tests/evaluator/input_%d.txt", i);
             try {
                 System.out.println(String.format("Adding test file tree from %s...", fileToLoad));
                 trees.add(createAST(CharStreams.fromFileName(fileToLoad)));
@@ -49,13 +48,13 @@ public class TestPythonTranspilerVisitor {
 
     @Test
     void TestGenASTMatchesExisting() {
-        PythonTranspilerVisitor transpiler = new PythonTranspilerVisitor();
+        EvaluatorVisitor evaluator = new EvaluatorVisitor();
 
         int testNumber = 0;
-        String transpiledSource = "";
+        EvaluationOutput output = null;
         for (ASTNode root : trees) {
             try {
-                transpiledSource = transpiler.visit(root);
+                output = (EvaluationOutput) evaluator.visit(root);
             } catch (InvalidIDException | InvalidOperationException | UndefinedVariableException err) {
                 err.printStackTrace();
                 Assertions.fail(err.getMessage());
@@ -64,7 +63,11 @@ public class TestPythonTranspilerVisitor {
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(String.format("OUTPUT: TEST %d", testNumber));
             System.out.println("-----------------------------------------------------------------------");
-            System.out.println(transpiledSource);
+            System.out.println(output.getOutput().stream().collect(Collectors.joining("\n")));
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println(String.format("VARMAP: TEST %d", testNumber));
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println(output.getVariableMap());
             System.out.println("-----------------------------------------------------------------------");
             testNumber++;
         }

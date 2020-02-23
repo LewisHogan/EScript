@@ -1,3 +1,4 @@
+import escript.PrettyPrintVisitor;
 import escript.ast.ASTBuilder;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
@@ -59,7 +60,7 @@ public class TestPrettyPrintVisitor {
             }
 
             System.out.println("-----------------------------------------------------------------------");
-            System.out.println(String.format("OUTPUT: %d", testNumber));
+            System.out.println(String.format("OUTPUT: TEST %d", testNumber));
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(formattedSource);
             System.out.println("-----------------------------------------------------------------------");

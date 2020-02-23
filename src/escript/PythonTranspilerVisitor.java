@@ -1,3 +1,5 @@
+package escript;
+
 import escript.ast.ASTVisitor;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
