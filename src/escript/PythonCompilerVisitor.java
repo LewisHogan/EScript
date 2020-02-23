@@ -137,16 +137,15 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
         String conditional = String.format("%sif %s:\n", isElseIf ? "el" : "", visit((ConditionNode) node.getPayload()));
         String body = "";
         for (int i = 0; i < node.getChildCount(); i++) {
-            // TODO: FIX
             // I assume this will break with multistatement ifs
             // I was correct
+            // TODO: Check if I fixed this
             ASTNode child = (ASTNode) node.getChild(i);
             if (child instanceof BlockNode)
                 body += visit(child);
             else
                 body += visit(new BlockNode(Arrays.asList(child)));
 
-//            body += visit((ASTNode) node.getChild(i));
             if (i != node.getChildCount() - 1) body += "\n";
         }
 

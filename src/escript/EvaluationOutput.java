@@ -14,6 +14,7 @@ public class EvaluationOutput {
     private List<String> output = new ArrayList<>();
     private HashMap<String, Object> variableMap = new HashMap<>();
 
+    // TODO: Improve comments
     public EvaluationOutput() {
 
     }

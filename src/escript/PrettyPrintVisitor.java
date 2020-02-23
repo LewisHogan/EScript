@@ -152,9 +152,6 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         String conditional = String.format("%sif (%s) {\n", isElseIf ? "else " : "", visit((ConditionNode) node.getPayload()));
         String body = "";
         for (int i = 0; i < node.getChildCount(); i++) {
-            // TODO: FIX
-            // I assume this will break with multistatement ifs
-            // I was correct
             ASTNode child = (ASTNode) node.getChild(i);
             if (child instanceof BlockNode)
                 body += visit(child);

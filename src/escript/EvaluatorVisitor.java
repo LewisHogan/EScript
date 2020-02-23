@@ -192,8 +192,7 @@ public class EvaluatorVisitor extends ASTVisitor {
                     String.format("Cannot %s %s and %s!", op.name(), left, right)
             );
 
-        // Convert to the same class is different before performing operations
-        // TODO: Double check is right
+        // Convert to the same class inc ase is different before performing operations
         if (left.getClass() != right.getClass()) {
             if (left instanceof String) {
                 right = right.toString();
@@ -208,7 +207,7 @@ public class EvaluatorVisitor extends ASTVisitor {
         // By this point we know both operands are the same type.
         switch (op) {
             case ADD:
-                if (left instanceof String) //TODO: Remove quote marks from before appending
+                if (left instanceof String)
                     return String.format("%s", (String) left + right);
                 if (left instanceof Integer)
                     return (Integer) left + (Integer) right;
@@ -228,6 +227,7 @@ public class EvaluatorVisitor extends ASTVisitor {
                     return (Float) left * (Float) right;
                 break;
             case DIVIDE:
+                if ((Integer) right == 0) throw new InvalidOperationException("Cannot be divide by 0");
                 if (left instanceof Integer)
                     return (Integer) left / (Integer) right;
                 if (left instanceof Float)

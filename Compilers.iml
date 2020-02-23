@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="antlr-4.8-complete" level="project" />
+    <orderEntry type="library" exported="" name="antlr-4.8-complete" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.4">
         <CLASSES>
