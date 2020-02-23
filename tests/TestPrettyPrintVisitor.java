@@ -44,7 +44,7 @@ public class TestPrettyPrintVisitor {
 
     @Test
     void TestGenASTMatchesExisting() {
-        OldPrettyPrintVisitor prettyprinter = new OldPrettyPrintVisitor();
+        PrettyPrintVisitor prettyprinter = new PrettyPrintVisitor();
 
         int testNumber = 0;
         String formattedSource = "";

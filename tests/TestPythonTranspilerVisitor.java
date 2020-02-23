@@ -60,9 +60,6 @@ public class TestPythonTranspilerVisitor {
                 Assertions.fail(err.getMessage());
             }
 
-            System.out.println(String.format("INPUT: %d", testNumber));
-            System.out.println("-----------------------------------------------------------------------");
-            System.out.println(trees.get(testNumber).toStringTree());
             System.out.println("-----------------------------------------------------------------------");
             System.out.println(String.format("OUTPUT: %d", testNumber));
             System.out.println("-----------------------------------------------------------------------");

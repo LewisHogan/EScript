@@ -9,6 +9,7 @@ start: statement+;
 statement
 	: LBRACE statement* RBRACE #StatementBlock // Allows us to use multiple statements in control blocks like for loops
 	| ID SET (expression|condition) EOS #StatementAssignment
+	| left=ID op=(MULSET|DIVSET|MODSET|ADDSET|SUBSET) right=expression EOS #StatementModSetVar
 	| IF condition statement (ELSEIF condition statement)* (ELSE statement)? #StatementBranch
 	| WHILE condition statement #StatementWhile
 	| FOR LPAREN statement condition EOS expression RPAREN statement #StatementFor

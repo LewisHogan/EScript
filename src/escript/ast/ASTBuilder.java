@@ -28,7 +28,8 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     }
 
     @Override
-    public BlockNode visitStatementBlock(escriptParser.StatementBlockContext ctx) {
+    public ASTNode visitStatementBlock(escriptParser.StatementBlockContext ctx) {
+        if (ctx.statement().size() == 1) return visit(ctx.statement(0));
         // As we return a List<ASTNode> here, rather than a ASTNode, we cannot use escriptBaseVisitor<ASTNode>
         return new BlockNode(ctx.statement().stream().map(this::visit).collect(Collectors.toList()));
     }
@@ -275,6 +276,33 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitExpressionModSetVar(escriptParser.ExpressionModSetVarContext ctx) {
 
+        ExpressionNode node = null;
+        switch (ctx.op.getType()) {
+            case escriptParser.ADDSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.ADD, visit(ctx.right));
+                break;
+            case escriptParser.SUBSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.SUBTRACT, visit(ctx.right));
+                break;
+            case escriptParser.MULSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MULTIPLY, visit(ctx.right));
+                break;
+            case escriptParser.DIVSET:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.DIVIDE, visit(ctx.right));
+                break;
+            case escriptParser.POW:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.POWER, visit(ctx.right));
+                break;
+            case escriptParser.MOD:
+                node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MODULO, visit(ctx.right));
+                break;
+        }
+
+        return new AssignmentNode(new VariableNode(ctx.left.getText()), node);
+    }
+
+    @Override
+    public ASTNode visitStatementModSetVar(escriptParser.StatementModSetVarContext ctx) {
         ExpressionNode node = null;
         switch (ctx.op.getType()) {
             case escriptParser.ADDSET:

@@ -9,6 +9,5 @@ if (age > 2000)
 		}
 	else print("You need help");
 	test = !false;
-	if (!test) {
+	if (!test)
 		print(-5);
-	}

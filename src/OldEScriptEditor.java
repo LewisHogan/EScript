@@ -14,7 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class EScriptEditor {
+public class OldEScriptEditor {
 
     class ButtonPanel extends JPanel {
         JButton evalButton;
@@ -102,10 +102,10 @@ public class EScriptEditor {
     private JSplitPane evalCtrlPane;
     private JSplitPane evalLogMapPane;
 
-    private OldPrettyPrintVisitor prettyPrinter;
+    private PrettyPrintVisitor prettyPrinter;
 
-    public EScriptEditor() {
-        prettyPrinter = new OldPrettyPrintVisitor();
+    public OldEScriptEditor() {
+        prettyPrinter = new PrettyPrintVisitor();
 
         frame = new JFrame("EScript Editor");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,6 +175,6 @@ public class EScriptEditor {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new EScriptEditor().showWindow());
+        SwingUtilities.invokeLater(() -> new OldEScriptEditor().showWindow());
     }
 }
