@@ -3,6 +3,8 @@ package escript;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Represents all of the output from the Evaluator.
@@ -35,5 +37,16 @@ public class EvaluationOutput {
 
     public void setVariableMap(HashMap<String, Object> variableMap) {
         this.variableMap = (HashMap) variableMap.clone();
+    }
+
+    @Override
+    public String toString() {
+        String variables = variableMap.entrySet().stream().map(e -> {
+            String object = e.getValue().toString();
+            if (e.getValue() instanceof String) object = String.format("\"%s\"", object);
+            return String.format("%s: %s", e.getKey(), object);
+        }).collect(Collectors.joining(", "));
+
+        return String.format("{ %s }", variables);
     }
 }

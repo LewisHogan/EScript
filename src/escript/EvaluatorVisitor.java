@@ -196,18 +196,10 @@ public class EvaluatorVisitor extends ASTVisitor {
         // TODO: Double check is right
         if (left.getClass() != right.getClass()) {
             if (left instanceof String) {
-                String temp = right.toString();
-                if (temp.startsWith("\"") && temp.endsWith("\""))
-                    temp = temp.substring(1, temp.length()-1);
-                right = temp;
-            }
-            else if (right instanceof String) {
-                String temp = left.toString();
-                if (temp.startsWith("\"") && temp.endsWith("\""))
-                    temp = temp.substring(1, temp.length()-1);
-                left = temp;
-            }
-            else if (left instanceof Float && right instanceof Integer)
+                right = right.toString();
+            } else if (right instanceof String) {
+                left = left.toString();
+            } else if (left instanceof Float && right instanceof Integer)
                 right = Float.valueOf((Integer) right);
             else if (left instanceof Integer && right instanceof Float)
                 left = Float.valueOf((Integer) left);
@@ -217,7 +209,7 @@ public class EvaluatorVisitor extends ASTVisitor {
         switch (op) {
             case ADD:
                 if (left instanceof String) //TODO: Remove quote marks from before appending
-                    return String.format("\"%s\"", left.toString().substring(1, left.toString().length()-1) + right);
+                    return String.format("%s", (String) left + right);
                 if (left instanceof Integer)
                     return (Integer) left + (Integer) right;
                 if (left instanceof Float)
@@ -272,13 +264,13 @@ public class EvaluatorVisitor extends ASTVisitor {
     @Override
     protected Object visitInversion(InversionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         if (node.getPayload() == "!") {
-            return ! ((Boolean) visit((ASTNode) node.getChild(0)));
+            return !((Boolean) visit((ASTNode) node.getChild(0)));
         }
 
         // If we are here, that means that the node is a negation of a number, the only decision to make is Integer or Float
         Object child = visit((ASTNode) node.getChild(0));
-        if (child instanceof Integer) return - (Integer) child;
-        else if (child instanceof Float) return - (Float) child;
+        if (child instanceof Integer) return -(Integer) child;
+        else if (child instanceof Float) return -(Float) child;
 
         throw new InvalidOperationException(child.toString() + " is not an Integer, Float or Boolean and cannot be negated!");
     }
@@ -319,12 +311,13 @@ public class EvaluatorVisitor extends ASTVisitor {
     @Override
     protected Object visitString(StringNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         // Remove the extra quotes
-        return ((String) node.getPayload()).substring(1, ((String) node.getPayload()).length()-1);
+        return ((String) node.getPayload()).substring(1, ((String) node.getPayload()).length() - 1);
     }
 
     @Override
     protected Object visitVariable(VariableNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        if (!variableMap.containsKey(node.getPayload())) throw new UndefinedVariableException((String) node.getPayload());
+        if (!variableMap.containsKey(node.getPayload()))
+            throw new UndefinedVariableException((String) node.getPayload());
         return variableMap.get(node.getPayload());
     }
 }

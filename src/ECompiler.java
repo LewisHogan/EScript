@@ -1,4 +1,4 @@
-import escript.PythonTranspilerVisitor;
+import escript.PythonCompilerVisitor;
 import escript.ast.ASTBuilder;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
@@ -32,7 +32,7 @@ public class ECompiler {
         try {
             ASTNode root = createAST(CharStreams.fromFileName(inputFilename));
             try {
-                String pythonCode = new PythonTranspilerVisitor().visit(root);
+                String pythonCode = new PythonCompilerVisitor().visit(root);
                 try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFilename)))) {
                     writer.write(pythonCode);
                 } catch (IOException err) {

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Transpiles EScript into Python code.
  */
-public class PythonTranspilerVisitor extends ASTVisitor<String> {
+public class PythonCompilerVisitor extends ASTVisitor<String> {
 
     private int indentationLevel = 0;
 
