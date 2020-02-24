@@ -249,7 +249,12 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
         String body = "";
         for (int i = 0; i < node.getChildCount(); i++) {
             ASTNode child = (ASTNode) node.getChild(i);
-            body += visit(child) + endStatement(child) + "\n";
+            if (child instanceof BlockNode) body += visit(child) + endStatement(child) + "\n";
+            else {
+                indentationLevel++;
+                body += indent() + visit(child) + endStatement(child) + "\n";
+                indentationLevel--;
+            }
         }
         return header + body + indent() + "}";
     }

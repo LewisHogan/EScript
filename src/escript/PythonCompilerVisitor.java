@@ -14,6 +14,7 @@ import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
 import escript.ast.nodes.statement.payload.WhilePayload;
 import escript.ast.nodes.values.*;
+import jdk.nashorn.internal.ir.Block;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -235,7 +236,13 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
         String header = String.format("while %s:\n", visit(payload.getCondition()));
         String body = "";
         for (int i = 0; i < node.getChildCount(); i++) {
-            body += visit((ASTNode) node.getChild(i)) + "\n";
+            ASTNode child = (ASTNode) node.getChild(i);
+            if (child instanceof BlockNode) body += visit(child) + "\n";
+            else {
+                indentationLevel++;
+                body += indent() + visit(child) + "\n";
+                indentationLevel--;
+            }
         }
         return header + body;
     }

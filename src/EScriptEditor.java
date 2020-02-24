@@ -17,6 +17,9 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * Light IDE for testing Escript.
+ */
 public class EScriptEditor {
 
     class ControlsPanel extends JPanel {
