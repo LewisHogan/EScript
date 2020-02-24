@@ -8,6 +8,8 @@ import escript.ast.nodes.StartNode;
 import escript.ast.nodes.condition.BranchNode;
 import escript.ast.nodes.condition.ConditionNode;
 import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.function.FunctionCallNode;
+import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.values.*;
 
@@ -44,6 +46,8 @@ public abstract class ASTVisitor<E> {
         if (node instanceof IntegerNode) return visitInteger((IntegerNode) node);
         if (node instanceof StringNode) return visitString((StringNode) node);
         if (node instanceof VariableNode) return visitVariable((VariableNode) node);
+        if (node instanceof FunctionDefinitionNode) return visitFunctionDefinitionNode((FunctionDefinitionNode) node);
+        if (node instanceof FunctionCallNode) return visitFunctionCall((FunctionCallNode) node);
 
         return null;
     }
@@ -94,5 +98,11 @@ public abstract class ASTVisitor<E> {
             UndefinedVariableException, InvalidIDException;
 
     protected abstract E visitVariable(VariableNode node) throws InvalidOperationException,
+            UndefinedVariableException, InvalidIDException;
+
+    protected abstract E visitFunctionDefinitionNode(FunctionDefinitionNode node) throws InvalidOperationException,
+            UndefinedVariableException, InvalidIDException;
+
+    protected abstract E visitFunctionCall(FunctionCallNode node) throws InvalidOperationException,
             UndefinedVariableException, InvalidIDException;
 }

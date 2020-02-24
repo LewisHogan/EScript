@@ -47,6 +47,9 @@ RBRACE: '}';
 LPAREN: '(';
 RPAREN: ')';
 
+FUNCTION: 'function';
+RETURN: 'return';
+
 NUMBER
 	: FLOAT
 	| INTEGER;

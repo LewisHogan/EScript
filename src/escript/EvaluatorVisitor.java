@@ -10,27 +10,35 @@ import escript.ast.nodes.condition.BranchNode;
 import escript.ast.nodes.condition.ConditionNode;
 import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.function.FunctionCallNode;
+import escript.ast.nodes.function.FunctionDefinitionNode;
+import escript.ast.nodes.function.payload.FunctionDefinitionPayload;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
 import escript.ast.nodes.statement.payload.WhilePayload;
 import escript.ast.nodes.values.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class EvaluatorVisitor extends ASTVisitor {
 
     private EvaluationOutput output;
 
-    private HashMap<String, Object> variableMap;
+    private HashMap<String, FunctionDefinitionPayload> functionTable;
+    private HashMap<String, Object> symbolTable;
 
     @Override
     protected Object visitStart(StartNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        variableMap = new HashMap<>();
+        functionTable = new HashMap<>();
+        symbolTable = new HashMap<>();
         output = new EvaluationOutput();
         for (int i = 0; i < node.getChildCount(); i++)
             visit((ASTNode) node.getChild(i));
 
-        output.setVariableMap(variableMap);
+        output.setFunctionTable(functionTable);
+        output.setSymbolTable(symbolTable);
         return output;
     }
 
@@ -70,6 +78,8 @@ public class EvaluatorVisitor extends ASTVisitor {
             if (node.getParent() instanceof ConditionNode) {
                 return child;
             }
+
+            if (child == null) return false;
 
             if (child instanceof Boolean) return (Boolean) child;
             if (child instanceof Integer) return (Integer) child != 0;
@@ -182,7 +192,7 @@ public class EvaluatorVisitor extends ASTVisitor {
         }
 
         Object value = visit((ASTNode) node.getChild(1));
-        variableMap.put(variableName, value);
+        symbolTable.put(variableName, value);
         return value;
     }
 
@@ -331,8 +341,46 @@ public class EvaluatorVisitor extends ASTVisitor {
 
     @Override
     protected Object visitVariable(VariableNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        if (!variableMap.containsKey(node.getPayload()))
+        if (!symbolTable.containsKey(node.getPayload()))
             throw new UndefinedVariableException((String) node.getPayload());
-        return variableMap.get(node.getPayload());
+        return symbolTable.get(node.getPayload());
+    }
+
+    @Override
+    protected Object visitFunctionDefinitionNode(FunctionDefinitionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        FunctionDefinitionPayload payload = (FunctionDefinitionPayload) node.getPayload();
+        if (functionTable.containsKey(payload.getFunctionName())) throw new InvalidIDException(
+                String.format("Function %s already exists!", payload.getFunctionName()));
+
+        functionTable.put(payload.getFunctionName(), payload);
+        return null;
+    }
+
+    @Override
+    protected Object visitFunctionCall(FunctionCallNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        if (!functionTable.containsKey(node.getPayload().toString())) throw new UndefinedVariableException(
+                String.format("Function %s already exists!", node.getPayload().toString()));
+
+        Object result = null;
+        FunctionDefinitionPayload payload = functionTable.get(node.getPayload().toString());
+        // Throw an error if number of args don't match provided amount
+        if (payload.getParameters().size() != node.getChildCount()) throw new InvalidOperationException("Function has wrong number of args");
+
+        // TODO: Enter new Scope
+
+        List<VariableNode> parameters = payload.getParameters();
+        // Assign variables that were passed in to the equivalent thing
+        for (int i = 0; i < node.getChildCount(); i++) {
+            visit(new AssignmentNode(parameters.get(i), (ASTNode) node.getChild(i)));
+        }
+
+
+        for (ASTNode statement : payload.getStatements()) {
+            // TODO: if (statement instanceof ReturnNode), result = visit(statement);
+            visit(statement);
+        }
+        // TODO: Leave Scope
+        // TODO: Return last execution value if there was a return statement?
+        return result;
     }
 }

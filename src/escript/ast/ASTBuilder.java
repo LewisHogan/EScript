@@ -7,6 +7,8 @@ import escript.ast.nodes.condition.BranchNode;
 import escript.ast.nodes.condition.ConditionNode;
 import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.function.FunctionCallNode;
+import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.values.*;
 import escript.escriptBaseVisitor;
@@ -366,5 +368,33 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
         }
 
         return new AssignmentNode(new VariableNode(ctx.left.getText()), node);
+    }
+
+    @Override
+    public ASTNode visitStatementFunctionDeclaration(escriptParser.StatementFunctionDeclarationContext ctx) {
+        VariableNode name = new VariableNode(ctx.ID(0).getText());
+        List<VariableNode> args = ctx.ID().subList(1, ctx.ID().size()).stream().map(c -> new VariableNode(c.getText()))
+                .collect(Collectors.toList());
+
+        return new FunctionDefinitionNode(
+                ctx.ID(0).getText(),
+                args,
+                ctx.statement().stream().map(this::visit).collect(Collectors.toList())
+        );
+    }
+
+    @Override
+    public ASTNode visitStatementReturn(escriptParser.StatementReturnContext ctx) {
+        return super.visitStatementReturn(ctx);
+    }
+
+    @Override
+    public ASTNode visitExpressionFunctionCall(escriptParser.ExpressionFunctionCallContext ctx) {
+        List<ASTNode> parameters = ctx.expression().stream().map(this::visit).collect(Collectors.toList());
+
+        return new FunctionCallNode(
+                ctx.ID().getText(),
+                parameters
+        );
     }
 }

@@ -14,6 +14,8 @@ statement
 	| WHILE condition statement #StatementWhile
 	| FOR LPAREN statement condition EOS expression RPAREN statement #StatementFor
 	| PRINT LPAREN condition RPAREN EOS #StatementPrint
+	| FUNCTION ID LPAREN (ID (SEP ID)*)? RPAREN LBRACE statement* RBRACE #StatementFunctionDeclaration
+	| RETURN condition EOS #StatementReturn
 	| condition EOS #StatementCondition; // Allows conditions (and expressions) to be evaluated without assigning them.
 
 // A condition is something that can ultimately evaluate to either TRUE or FALSE.
@@ -39,4 +41,5 @@ expression
 	| (SUB|NOT)? LPAREN (expression|condition) RPAREN #ExpressionParenthesis
 	| ID SET expression #ExpressionAssignment // This is needed if we plan to support inline assignments a = (b = 2) + 1
 	| (NOT)? val=(TRUE|FALSE) #ExpressionBoolean
+	| ID LPAREN (expression (SEP expression)*)? RPAREN #ExpressionFunctionCall
 	| val=STRING #ExpressionString;

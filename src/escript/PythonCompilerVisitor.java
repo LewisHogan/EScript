@@ -10,6 +10,9 @@ import escript.ast.nodes.condition.BranchNode;
 import escript.ast.nodes.condition.ConditionNode;
 import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.function.FunctionCallNode;
+import escript.ast.nodes.function.FunctionDefinitionNode;
+import escript.ast.nodes.function.payload.FunctionDefinitionPayload;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
 import escript.ast.nodes.statement.payload.WhilePayload;
@@ -270,5 +273,34 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
     @Override
     protected String visitVariable(VariableNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         return node.getPayload().toString();
+    }
+
+    @Override
+    protected String visitFunctionDefinitionNode(FunctionDefinitionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        FunctionDefinitionPayload payload = (FunctionDefinitionPayload) node.getPayload();
+        String header =  String.format("def %s(%s):\n", payload.getFunctionName(),
+                payload.getParameters().stream().map(ASTNode::toString).collect(Collectors.joining(", ")));
+
+        String body = "";
+        for (int i = 0; i < node.getChildCount(); i++) {
+            ASTNode child = (ASTNode) node.getChild(i);
+            if (child instanceof BlockNode) body += visit(child) + "\n";
+            else {
+                indentationLevel++;
+                body += indent() + visit(child) + "\n";
+                indentationLevel--;
+            }
+        }
+        return header + body;
+    }
+
+    @Override
+    protected String visitFunctionCall(FunctionCallNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        String args = "";
+        for (int i = 0; i < node.getChildCount(); i++) {
+            ASTNode child = (ASTNode) node.getChild(i);
+            args += visit(child) + ((i != node.getChildCount()-1) ? ", " : "");
+        }
+        return String.format("%s(%s)", node.getPayload(), args);
     }
 }
