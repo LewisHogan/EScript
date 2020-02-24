@@ -1,15 +1,18 @@
 import escript.*;
 import escript.ast.ASTBuilder;
+import escript.ast.ASTBuilderErrorListener;
+import escript.ast.exceptions.ASTBuildException;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
+import org.antlr.runtime.CharStream;
 import org.antlr.v4.gui.TreeViewer;
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -33,13 +36,13 @@ public class EScriptEditor {
                         output.setText("No input provided");
                         return;
                     }
-                    ASTNode tree = createAST(text);
-                    updateAST(tree);
                     try {
+                        ASTNode tree = ASTBuilder.createAST(text);
+                        updateAST(tree);
                         EvaluationOutput evaluationOutput = (EvaluationOutput) new EvaluatorVisitor().visit(tree);
                         String log = evaluationOutput.getOutput().stream().collect(Collectors.joining("\n"));
                         output.setText(log + (log.equals("") ? "" : "\n") + evaluationOutput);
-                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException err) {
+                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException | ASTBuildException err) {
                         output.setText(err.getMessage());
                     }
                 });
@@ -52,11 +55,11 @@ public class EScriptEditor {
                         output.setText("No input provided");
                         return;
                     }
-                    ASTNode tree = createAST(text);
-                    updateAST(tree);
                     try {
+                        ASTNode tree = ASTBuilder.createAST(text);
+                        updateAST(tree);
                         output.setText(new PrettyPrintVisitor().visit(tree));
-                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException err) {
+                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException | ASTBuildException err) {
                         output.setText(err.getMessage());
                     }
                 });
@@ -69,11 +72,11 @@ public class EScriptEditor {
                         output.setText("No input provided");
                         return;
                     }
-                    ASTNode tree = createAST(text);
-                    updateAST(tree);
                     try {
+                        ASTNode tree = ASTBuilder.createAST(text);
+                        updateAST(tree);
                         output.setText(new PythonCompilerVisitor().visit(tree));
-                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException err) {
+                    } catch (UndefinedVariableException | InvalidIDException | InvalidOperationException | ASTBuildException err) {
                         output.setText(err.getMessage());
                     }
                 });
@@ -134,11 +137,6 @@ public class EScriptEditor {
         frame.setLocationRelativeTo(null);
 
         frame.setVisible(true);
-    }
-
-    ASTNode createAST(String source) {
-        escriptParser parser = new escriptParser(new CommonTokenStream(new escriptLexer(CharStreams.fromString(source))));
-        return new ASTBuilder().visit(parser.start());
     }
 
     void updateAST(ASTNode tree) {

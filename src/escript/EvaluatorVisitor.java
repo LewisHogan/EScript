@@ -66,9 +66,15 @@ public class EvaluatorVisitor extends ASTVisitor {
         // Experimental single variable condition
         if (node.getChildCount() == 1) {
             Object child = visit((ASTNode) node.getChild(0));
+            // Sometimes condition nodes are nested, in which case we must assume we are an operand
+            if (node.getParent() instanceof ConditionNode) {
+                return child;
+            }
+
             if (child instanceof Boolean) return (Boolean) child;
             if (child instanceof Integer) return (Integer) child != 0;
             if (child instanceof Float) return (Float) child != 0;
+            if (child instanceof String) return !child.equals("");
         }
 
         Object left = node.getChild(0);
@@ -81,14 +87,16 @@ public class EvaluatorVisitor extends ASTVisitor {
 
         // When we get to the actual operation, we want both types to be the same for easy handling
         if (left.getClass() != right.getClass()) {
-            if (left instanceof String)
+            if (left instanceof Float && right instanceof Integer)
+                right = Float.valueOf((Integer) right);
+            if (left instanceof Integer && right instanceof Float)
+                left = Float.valueOf((Integer) left);
+            else if (op == EComparisonOperator.EQUALS || op == EComparisonOperator.NOT_EQUALS)
+                return false; // "2" == 2 should return false, but 2.0 == 2 should be true
+            else if (left instanceof String)
                 right = right.toString();
             else if (right instanceof String)
                 left = left.toString();
-            else if (left instanceof Float && right instanceof Integer)
-                right = Float.valueOf((Integer) right);
-            else if (left instanceof Integer && right instanceof Float)
-                left = Float.valueOf((Integer) left);
         }
 
         // TODO: Throw exceptions if invalid

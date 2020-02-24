@@ -1,5 +1,6 @@
 package escript.ast;
 
+import escript.ast.exceptions.ASTBuildException;
 import escript.ast.nodes.ASTNode;
 import escript.ast.nodes.StartNode;
 import escript.ast.nodes.condition.BranchNode;
@@ -9,7 +10,11 @@ import escript.ast.nodes.condition.IfNode;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.values.*;
 import escript.escriptBaseVisitor;
+import escript.escriptLexer;
 import escript.escriptParser;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +25,41 @@ import java.util.stream.Collectors;
  * Class to construct an Abstract Syntax Tree from the Concrete Syntax Tree produced by Antlr.
  */
 public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
+
+    /**
+     * Static Method to simplify creating Abstract Syntax Trees.
+     *
+     * @param source The source code to transform into an AST.
+     * @return StartNode of the AST.
+     * @throws ASTBuildException If a valid ASTNode is unable to be generated.
+     */
+    public static ASTNode createAST(String source) throws ASTBuildException {
+        return createAST(CharStreams.fromString(source));
+    }
+
+    /**
+     * Static Method to simplify creating Abstract Syntax Trees.
+     *
+     * @param source The Charstream to transform into an AST.
+     * @return StartNode of the AST.
+     * @throws ASTBuildException
+     */
+    public static ASTNode createAST(CharStream source) throws ASTBuildException {
+        escriptLexer lexer = new escriptLexer(source);
+        escriptParser parser = new escriptParser(new CommonTokenStream(lexer));
+
+        parser.removeErrorListeners();
+        ASTBuilderErrorListener listener = new ASTBuilderErrorListener();
+        parser.addErrorListener(listener);
+
+        ASTNode tree = new ASTBuilder().visit(parser.start());
+        List<String> errors = listener.getErrors();
+        if (errors.size() != 0) {
+            throw new ASTBuildException(errors.stream().collect(Collectors.joining("\n")));
+        }
+        return tree;
+    }
+
     @Override
     public ASTNode visitStart(escriptParser.StartContext ctx) {
         return new StartNode(

@@ -1,5 +1,6 @@
 import escript.PythonCompilerVisitor;
 import escript.ast.ASTBuilder;
+import escript.ast.exceptions.ASTBuildException;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
@@ -18,21 +19,15 @@ import java.nio.charset.StandardCharsets;
  */
 public class ECompiler {
 
-    private static ASTNode createAST(CharStream source) {
-        escriptLexer lexer = new escriptLexer(source);
-        escriptParser parser = new escriptParser(new CommonTokenStream(lexer));
-        return new ASTBuilder().visit(parser.start());
-    }
-
     private static String compile(String inputFile) {
         try {
-            ASTNode root = createAST(CharStreams.fromFileName(inputFile));
+            ASTNode root = ASTBuilder.createAST(CharStreams.fromFileName(inputFile));
             try {
                 return new PythonCompilerVisitor().visit(root);
             } catch (InvalidOperationException | UndefinedVariableException | InvalidIDException e) {
                 e.printStackTrace();
             }
-        } catch (IOException err) {
+        } catch (IOException | ASTBuildException err) {
             System.err.println(err.getMessage());
         }
         return "";

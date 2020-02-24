@@ -202,6 +202,7 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
     @Override
     protected String visitFor(ForNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         // Transform for loop into a while loop because that's easier then dealing with weird python for loops
+        // which go "for element in set:"
         ForPayload payload = (ForPayload) node.getPayload();
 
         List<ASTNode> statements = new ArrayList<>();

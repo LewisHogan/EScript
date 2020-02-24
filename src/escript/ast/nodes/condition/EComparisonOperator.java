@@ -12,7 +12,7 @@ public enum EComparisonOperator {
     LESS_THAN_OR_EQUALS("<=", 2),
     AND("&&", 1),
     OR("||", 1),
-    VALUE("", 0);
+    VALUE("VALUE", 0);
 
     private String symbol;
     private int priority;

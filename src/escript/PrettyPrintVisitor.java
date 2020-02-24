@@ -208,7 +208,6 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
 
     @Override
     protected String visitFor(ForNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        // Transform for loop into a while loop because that's easier then dealing with weird python for loops
         ForPayload payload = (ForPayload) node.getPayload();
 
         String header = String.format("for (%s; %s; %s) {\n",
