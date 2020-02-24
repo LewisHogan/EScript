@@ -113,10 +113,10 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
                 comparisonSymbol = "!=";
                 break;
             case OR:
-                comparisonSymbol = "or";
+                comparisonSymbol = "||";
                 break;
             case AND:
-                comparisonSymbol = "and";
+                comparisonSymbol = "&&";
                 break;
             case LESS_THAN:
                 comparisonSymbol = "<";

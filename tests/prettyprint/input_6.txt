@@ -1,0 +1,16 @@
+name = "Lewis";
+age = 22;
+is_old = age > 48;
+money = 0;
+if is_old == true
+	money += 1000;
+else if (money == 0) {
+	print("You are bankrupt");
+	while (money < age) {
+		money += 5 / 10.4;
+		print("Giving you 1 money, total is now: £" + money);
+	}
+}
+
+if ((is_old || 3 > 2) && is_old != false)
+	print("foo");
