@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class TestASTVisitors {
 
-    public static final int PRETTY_TESTS = 6;
+    public static final int PRETTY_TESTS = 7;
     public static final int EVALUATOR_TESTS = 5;
     public static final int PYTHON_TESTS = 5;
 
