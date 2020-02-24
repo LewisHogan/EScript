@@ -18,6 +18,15 @@ import escript.ast.nodes.values.*;
  */
 public abstract class ASTVisitor<E> {
 
+    /**
+     * Visits the provided node and returns a value from exploring the tree.
+     *
+     * @param node The node/tree to begin visiting from.
+     * @return the value of exploring the specific node tree, value varies depending on the type E.
+     * @throws InvalidOperationException  If evaluating the node is invalid
+     * @throws UndefinedVariableException If the node uses a variable that does not exist
+     * @throws InvalidIDException         If the node describes an identifier that is not valid
+     */
     public E visit(ASTNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         if (node instanceof StartNode) return visitStart((StartNode) node);
         if (node instanceof BranchNode) return visitBranch((BranchNode) node);

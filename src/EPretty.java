@@ -1,5 +1,4 @@
 import escript.PrettyPrintVisitor;
-import escript.PythonCompilerVisitor;
 import escript.ast.ASTBuilder;
 import escript.ast.exceptions.ASTBuildException;
 import escript.ast.exceptions.InvalidIDException;
@@ -50,6 +49,5 @@ public class EPretty {
         }
 
         System.out.println("USAGE: EPretty input_file [output_file]");
-        return;
     }
 }

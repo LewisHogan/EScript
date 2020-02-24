@@ -14,7 +14,6 @@ import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
 import escript.ast.nodes.statement.payload.WhilePayload;
 import escript.ast.nodes.values.*;
-import jdk.nashorn.internal.ir.Block;
 
 import java.util.ArrayList;
 import java.util.Arrays;

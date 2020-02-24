@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+/**
+ * Listens for Antlr error messages, and stores them in a log for presentation later.
+ */
 public class ASTBuilderErrorListener implements ANTLRErrorListener {
 
     private List<String> errors = new ArrayList<>();

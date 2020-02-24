@@ -1,24 +1,19 @@
 import escript.*;
 import escript.ast.ASTBuilder;
-import escript.ast.ASTBuilderErrorListener;
 import escript.ast.exceptions.ASTBuildException;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
-import org.antlr.runtime.CharStream;
 import org.antlr.v4.gui.TreeViewer;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 
 import javax.swing.*;
-import java.util.List;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Light IDE for testing EScript.
+ * Standalone IDE for testing EScript.
  */
 public class EScriptEditor {
 

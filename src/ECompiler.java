@@ -5,11 +5,7 @@ import escript.ast.exceptions.InvalidIDException;
 import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
-import escript.escriptLexer;
-import escript.escriptParser;
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -53,6 +49,5 @@ public class ECompiler {
         }
 
         System.out.println("USAGE: ECompiler input_file [output_file]");
-        return;
     }
 }
