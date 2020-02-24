@@ -12,6 +12,7 @@ import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
+import escript.ast.nodes.function.ReturnNode;
 import escript.ast.nodes.function.payload.FunctionDefinitionPayload;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
@@ -74,10 +75,12 @@ public class EvaluatorVisitor extends ASTVisitor {
         // Experimental single variable condition
         if (node.getChildCount() == 1) {
             Object child = visit((ASTNode) node.getChild(0));
+
             // Sometimes condition nodes are nested, in which case we must assume we are an operand
-            if (node.getParent() instanceof ConditionNode) {
+            if (node.getParent() instanceof ConditionNode || node.getParent() instanceof ReturnNode) {
                 return child;
             }
+
 
             if (child == null) return false;
 
@@ -361,7 +364,6 @@ public class EvaluatorVisitor extends ASTVisitor {
         if (!functionTable.containsKey(node.getPayload().toString())) throw new UndefinedVariableException(
                 String.format("Function %s already exists!", node.getPayload().toString()));
 
-        Object result = null;
         FunctionDefinitionPayload payload = functionTable.get(node.getPayload().toString());
         // Throw an error if number of args don't match provided amount
         if (payload.getParameters().size() != node.getChildCount()) throw new InvalidOperationException("Function has wrong number of args");
@@ -376,11 +378,15 @@ public class EvaluatorVisitor extends ASTVisitor {
 
 
         for (ASTNode statement : payload.getStatements()) {
-            // TODO: if (statement instanceof ReturnNode), result = visit(statement);
-            visit(statement);
+            if (statement instanceof ReturnNode) return visit(statement);
         }
         // TODO: Leave Scope
         // TODO: Return last execution value if there was a return statement?
-        return result;
+        return null;
+    }
+
+    @Override
+    protected Object visitReturn(ReturnNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        return visit((ASTNode) node.getChild(0));
     }
 }

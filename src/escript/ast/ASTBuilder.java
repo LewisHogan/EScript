@@ -1,6 +1,7 @@
 package escript.ast;
 
 import escript.ast.exceptions.ASTBuildException;
+import escript.ast.exceptions.InvalidIDException;
 import escript.ast.nodes.ASTNode;
 import escript.ast.nodes.StartNode;
 import escript.ast.nodes.condition.BranchNode;
@@ -9,6 +10,7 @@ import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
+import escript.ast.nodes.function.ReturnNode;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.values.*;
 import escript.escriptBaseVisitor;
@@ -385,7 +387,9 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitStatementReturn(escriptParser.StatementReturnContext ctx) {
-        return super.visitStatementReturn(ctx);
+        return new ReturnNode(
+                visit(ctx.condition())
+        );
     }
 
     @Override

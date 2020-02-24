@@ -15,6 +15,7 @@ statement
 	| FOR LPAREN statement condition EOS expression RPAREN statement #StatementFor
 	| PRINT LPAREN condition RPAREN EOS #StatementPrint
 	| FUNCTION ID LPAREN (ID (SEP ID)*)? RPAREN LBRACE statement* RBRACE #StatementFunctionDeclaration
+	| FUNCTION ID LPAREN (ID (SEP ID)*)? RPAREN statement #StatementFunctionDeclaration
 	| RETURN condition EOS #StatementReturn
 	| condition EOS #StatementCondition; // Allows conditions (and expressions) to be evaluated without assigning them.
 

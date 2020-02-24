@@ -12,7 +12,9 @@ import escript.ast.nodes.condition.EComparisonOperator;
 import escript.ast.nodes.condition.IfNode;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
+import escript.ast.nodes.function.ReturnNode;
 import escript.ast.nodes.function.payload.FunctionDefinitionPayload;
+import escript.ast.nodes.function.payload.ReturnPayload;
 import escript.ast.nodes.statement.*;
 import escript.ast.nodes.statement.payload.ForPayload;
 import escript.ast.nodes.statement.payload.WhilePayload;
@@ -313,5 +315,10 @@ public class PrettyPrintVisitor extends ASTVisitor<String> {
             args += visit(child) + ((i != node.getChildCount()-1) ? ", " : "");
         }
         return String.format("%s(%s)", node.getPayload(), args);
+    }
+
+    @Override
+    protected String visitReturn(ReturnNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        return String.format("return %s", visit((ASTNode) ((ReturnPayload) node.getPayload()).getPayload()));
     }
 }

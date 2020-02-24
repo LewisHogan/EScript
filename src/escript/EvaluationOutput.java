@@ -1,7 +1,5 @@
 package escript;
 
-import escript.ast.nodes.ASTNode;
-import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.function.payload.FunctionDefinitionPayload;
 
 import java.util.ArrayList;

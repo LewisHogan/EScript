@@ -1,17 +1,14 @@
 package escript.ast.nodes.function;
 
 import escript.ast.nodes.ASTNode;
+import escript.ast.nodes.function.payload.ReturnPayload;
 
 /**
  * Represents a value being returned from a function
  */
-public class ReturnNode extends ASTNode<ASTNode> {
+public class ReturnNode extends ASTNode<ReturnPayload> {
     public ReturnNode(ASTNode valueToReturn) {
-        setPayload(valueToReturn);
-    }
-
-    @Override
-    public String toString() {
-        return "Return " + getPayload().toString();
+        setPayload(new ReturnPayload(valueToReturn));
+        addChild(valueToReturn);
     }
 }
