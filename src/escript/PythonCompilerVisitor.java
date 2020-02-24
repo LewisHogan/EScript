@@ -165,14 +165,16 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
         ASTNode right = (ASTNode) node.getChild(1);
         String leftStr = visit(left);
         String rightStr = visit(right);
+        // To handle expressions like ("a" + "b") + "c" we need to recursively check expression nodes
         switch ((EExpressionOperator) node.getPayload()) {
             case ADD:
                 expressionSymbol = "+";
                 // In python you cannot just add an two non string types for concatenation
-                if (left instanceof StringNode && !(right instanceof StringNode))
+                if ((left instanceof StringNode || left instanceof ExpressionNode) && !(right instanceof StringNode)) {
                     rightStr = String.format("str(%s)", rightStr);
-                if (!(left instanceof StringNode) && right instanceof StringNode)
-                    leftStr = String.format("str(%s)", left);
+                }
+                if (!(left instanceof StringNode) && (right instanceof StringNode || right instanceof ExpressionNode))
+                    leftStr = String.format("str(%s)", leftStr);
                 break;
             case POWER:
                 expressionSymbol = "**";
