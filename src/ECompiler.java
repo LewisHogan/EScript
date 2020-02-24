@@ -28,7 +28,7 @@ public class ECompiler {
                 e.printStackTrace();
             }
         } catch (IOException | ASTBuildException err) {
-            System.err.println(err.getMessage());
+            err.printStackTrace();
         }
         return "";
     }
@@ -41,7 +41,7 @@ public class ECompiler {
 
         if (args.length == 2) {
             // Need to specify UTF8 otherwise characters like the £ symbol don't seem to be encoded correctly?
-            // Unknown bug seems to be
+            // Note: this does not fix piping output, but it works as long as the programmer sticks to ASCII code.
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), StandardCharsets.UTF_8))) {
                 writer.write(compile(args[0]));
             } catch (FileNotFoundException e) {
