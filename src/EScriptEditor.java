@@ -142,6 +142,7 @@ public class EScriptEditor {
     void updateAST(ASTNode tree) {
         astContainer.removeAll();
         TreeViewer treeViewer = new TreeViewer(Arrays.asList(""), tree);
+        treeViewer.setScale(1.25f);
         astContainer.add(treeViewer);
         frame.revalidate();
         frame.repaint();
