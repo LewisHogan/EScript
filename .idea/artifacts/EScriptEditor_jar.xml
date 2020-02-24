@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/EScript</output-path>
     <root id="archive" name="EScriptEditor.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/EScriptEditor/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/manifest/editor/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Compilers" />
       <element id="extracted-dir" path="$PROJECT_DIR$/antlr-4.8-complete.jar" path-in-jar="/" />
