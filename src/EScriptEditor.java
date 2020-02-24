@@ -24,8 +24,6 @@ public class EScriptEditor {
 
     class ControlsPanel extends JPanel {
 
-        private ASTBuilder astBuilder;
-
         public ControlsPanel() {
             JButton evalButton = new JButton("Evaluate");
             JButton prettyButton = new JButton("Pretty-Print");
