@@ -282,7 +282,8 @@ public class EvaluatorVisitor extends ASTVisitor {
                 }
                 break;
             case POWER:
-                return Math.pow((Float) left, (Float) right);
+                if (left instanceof Integer) return (int) Math.pow((Integer) left, (Integer) right);
+                return (float) Math.pow((Float) left, (Float) right);
         }
 
         return false;

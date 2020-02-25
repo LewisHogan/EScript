@@ -334,10 +334,10 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
             case escriptParser.DIVSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.DIVIDE, visit(ctx.right));
                 break;
-            case escriptParser.POW:
+            case escriptParser.POWSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.POWER, visit(ctx.right));
                 break;
-            case escriptParser.MOD:
+            case escriptParser.MODSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MODULO, visit(ctx.right));
                 break;
         }
@@ -361,10 +361,10 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
             case escriptParser.DIVSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.DIVIDE, visit(ctx.right));
                 break;
-            case escriptParser.POW:
+            case escriptParser.POWSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.POWER, visit(ctx.right));
                 break;
-            case escriptParser.MOD:
+            case escriptParser.MODSET:
                 node = new ExpressionNode(new VariableNode(ctx.left.getText()), EExpressionOperator.MODULO, visit(ctx.right));
                 break;
         }
