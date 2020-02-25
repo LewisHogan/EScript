@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EEvaluator:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/EScript</output-path>
+    <root id="archive" name="EEvaluator.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/manifest/eevaluator/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Compilers" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/antlr-4.8-complete.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
