@@ -376,17 +376,17 @@ public class EvaluatorVisitor extends ASTVisitor {
     @Override
     protected Object visitFunctionCall(FunctionCallNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         if (!functionTable.containsKey(node.getPayload().toString())) throw new UndefinedVariableException(
-                String.format("Function %s already exists!", node.getPayload().toString()));
+                String.format("Function '%s' does not exists!", node.getPayload().toString()));
 
         FunctionDefinitionPayload payload = functionTable.get(node.getPayload().toString());
         // Throw an error if number of args don't match provided amount
         if (payload.getParameters().size() != node.getChildCount())
-            throw new InvalidOperationException("Function has wrong number of args");
+            throw new InvalidOperationException(String.format("Function '%s' has wrong number of args",
+                    node.getPayload().toString()));
 
-        // TODO: Enter new Scope
-
-        // We are a nested function, so we want to copy the values from the calling that are relevant when we
-        // enter a new scope, but only the ones
+        // We want to copy the values from the calling that are relevant when we
+        // enter a new scope, but only the ones which are actually arguments of the function, and we want to name them
+        // as definition calls them
         List<Object> values = new ArrayList<>();
         for (int i = 0; i < node.getChildCount(); i++) values.add(visit((ASTNode) node.getChild(i)));
 
