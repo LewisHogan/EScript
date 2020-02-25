@@ -391,7 +391,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitExpressionFunctionCall(escriptParser.ExpressionFunctionCallContext ctx) {
-        List<ASTNode> parameters = ctx.expression().stream().map(this::visit).collect(Collectors.toList());
+        List<ASTNode> parameters = ctx.condition().stream().map(this::visit).collect(Collectors.toList());
 
         return new FunctionCallNode(
                 ctx.ID().getText(),

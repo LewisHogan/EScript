@@ -43,5 +43,5 @@ expression
 	| (SUB|NOT)? LPAREN (expression|condition) RPAREN #ExpressionParenthesis
 	| ID SET expression #ExpressionAssignment // This is needed if we plan to support inline assignments a = (b = 2) + 1
 	| (NOT)? val=(TRUE|FALSE) #ExpressionBoolean
-	| ID LPAREN (expression (SEP expression)*)? RPAREN #ExpressionFunctionCall
+	| ID LPAREN (condition (SEP condition)*)? RPAREN #ExpressionFunctionCall
 	| val=STRING #ExpressionString;

@@ -88,7 +88,7 @@ public class EvaluatorVisitor extends ASTVisitor {
             Object child = visit((ASTNode) node.getChild(0));
 
             // Sometimes condition nodes are nested, in which case we must assume we are an operand
-            if (node.getParent() instanceof ConditionNode || node.getParent() instanceof ReturnNode || node.getParent() instanceof TernaryNode) {
+            if (node.getParent() instanceof ConditionNode || node.getParent() instanceof ReturnNode || node.getParent() instanceof TernaryNode || node.getParent() instanceof FunctionCallNode) {
                 return child;
             }
 
