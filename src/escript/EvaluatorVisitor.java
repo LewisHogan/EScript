@@ -22,6 +22,7 @@ import escript.ast.nodes.values.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 public class EvaluatorVisitor extends ASTVisitor {
 
@@ -29,6 +30,19 @@ public class EvaluatorVisitor extends ASTVisitor {
 
     private HashMap<String, FunctionDefinitionPayload> functionTable;
     private HashMap<String, Object> symbolTable;
+
+    public Stack<HashMap> scope = new Stack<>();
+
+    public void enterScope() {
+        scope.push(symbolTable);
+        symbolTable = new HashMap<>();
+    }
+
+    public void leaveScope() {
+        symbolTable = scope.pop();
+    }
+
+    private boolean shouldLeaveFunction = false;
 
     @Override
     protected Object visitStart(StartNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
@@ -366,27 +380,42 @@ public class EvaluatorVisitor extends ASTVisitor {
 
         FunctionDefinitionPayload payload = functionTable.get(node.getPayload().toString());
         // Throw an error if number of args don't match provided amount
-        if (payload.getParameters().size() != node.getChildCount()) throw new InvalidOperationException("Function has wrong number of args");
+        if (payload.getParameters().size() != node.getChildCount())
+            throw new InvalidOperationException("Function has wrong number of args");
 
         // TODO: Enter new Scope
 
+        // We are a nested function, so we want to copy the values from the calling that are relevant when we
+        // enter a new scope, but only the ones
+        List<Object> values = new ArrayList<>();
+        for (int i = 0; i < node.getChildCount(); i++) values.add(visit((ASTNode) node.getChild(i)));
+
+        enterScope();
+
+        // Parameters contains the names of what the variable should be
         List<VariableNode> parameters = payload.getParameters();
         // Assign variables that were passed in to the equivalent thing
         for (int i = 0; i < node.getChildCount(); i++) {
-            visit(new AssignmentNode(parameters.get(i), (ASTNode) node.getChild(i)));
+            symbolTable.put(parameters.get(i).getPayload().toString(), values.get(i));
         }
 
-
+        Object result = null;
         for (ASTNode statement : payload.getStatements()) {
-            if (statement instanceof ReturnNode) return visit(statement);
+            result = visit(statement);
+            if (shouldLeaveFunction) {
+                shouldLeaveFunction = false;
+                break;
+            }
         }
-        // TODO: Leave Scope
-        // TODO: Return last execution value if there was a return statement?
-        return null;
+
+        leaveScope();
+        return result;
     }
 
     @Override
     protected Object visitReturn(ReturnNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
-        return visit((ASTNode) node.getChild(0));
+        Object result = visit((ASTNode) node.getChild(0));
+        shouldLeaveFunction = true;
+        return result;
     }
 }
