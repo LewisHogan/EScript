@@ -28,7 +28,8 @@ condition
 	| NOT condition #ConditionInverted
 	| left=expression op=(EQUALS|NOT_EQUALS) right=expression #ConditionComparison
 	| left=expression op=(GREATER_THAN|LESS_THAN|GREATER_THAN_OR_EQUALS|LESS_THAN_OR_EQUALS|LESS_THAN) right=expression #ConditionComparison
-	| left=condition op=(AND|OR|EQUALS|NOT_EQUALS) right=condition #ConditionLogic;
+	| left=condition op=(AND|OR|EQUALS|NOT_EQUALS) right=condition #ConditionLogic
+	| left=condition QUESTION mid=condition COLON right=condition #ConditionTernary;
 
 // An expression is a single minor unit of evaluation.
 // e.g. 2 + 4

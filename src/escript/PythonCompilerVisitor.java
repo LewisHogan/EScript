@@ -6,10 +6,7 @@ import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
 import escript.ast.nodes.StartNode;
-import escript.ast.nodes.condition.BranchNode;
-import escript.ast.nodes.condition.ConditionNode;
-import escript.ast.nodes.condition.EComparisonOperator;
-import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.condition.*;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.function.ReturnNode;
@@ -309,5 +306,10 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
     @Override
     protected String visitReturn(ReturnNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         return String.format("return %s", visit((ASTNode) ((ReturnPayload) node.getPayload()).getPayload()));
+    }
+
+    @Override
+    protected String visitTernary(TernaryNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        return String.format("%s if %s else %s", visit((ASTNode) node.getChild(0)), visit((ASTNode) node.getPayload()), visit((ASTNode) node.getChild(1)));
     }
 }

@@ -4,10 +4,7 @@ import escript.ast.exceptions.ASTBuildException;
 import escript.ast.exceptions.InvalidIDException;
 import escript.ast.nodes.ASTNode;
 import escript.ast.nodes.StartNode;
-import escript.ast.nodes.condition.BranchNode;
-import escript.ast.nodes.condition.ConditionNode;
-import escript.ast.nodes.condition.EComparisonOperator;
-import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.condition.*;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.function.ReturnNode;
@@ -400,5 +397,13 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
                 ctx.ID().getText(),
                 parameters
         );
+    }
+
+    @Override
+    public ASTNode visitConditionTernary(escriptParser.ConditionTernaryContext ctx) {
+        ASTNode condition = visit(ctx.left);
+        ASTNode ifTrue = visit(ctx.mid);
+        ASTNode ifFalse = visit(ctx.right);
+        return new TernaryNode(condition, ifTrue, ifFalse);
     }
 }

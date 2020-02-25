@@ -37,6 +37,8 @@ ELSEIF: 'else if';
 ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
+QUESTION: '?';
+COLON: ':';
 PRINT: 'print';
 
 // Structure Tokens

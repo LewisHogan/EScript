@@ -6,10 +6,7 @@ import escript.ast.exceptions.InvalidOperationException;
 import escript.ast.exceptions.UndefinedVariableException;
 import escript.ast.nodes.ASTNode;
 import escript.ast.nodes.StartNode;
-import escript.ast.nodes.condition.BranchNode;
-import escript.ast.nodes.condition.ConditionNode;
-import escript.ast.nodes.condition.EComparisonOperator;
-import escript.ast.nodes.condition.IfNode;
+import escript.ast.nodes.condition.*;
 import escript.ast.nodes.function.FunctionCallNode;
 import escript.ast.nodes.function.FunctionDefinitionNode;
 import escript.ast.nodes.function.ReturnNode;
@@ -91,7 +88,7 @@ public class EvaluatorVisitor extends ASTVisitor {
             Object child = visit((ASTNode) node.getChild(0));
 
             // Sometimes condition nodes are nested, in which case we must assume we are an operand
-            if (node.getParent() instanceof ConditionNode || node.getParent() instanceof ReturnNode) {
+            if (node.getParent() instanceof ConditionNode || node.getParent() instanceof ReturnNode || node.getParent() instanceof TernaryNode) {
                 return child;
             }
 
@@ -418,5 +415,13 @@ public class EvaluatorVisitor extends ASTVisitor {
         Object result = visit((ASTNode) node.getChild(0));
         shouldLeaveFunction = true;
         return result;
+    }
+
+    @Override
+    protected Object visitTernary(TernaryNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
+        if ((Boolean) visit((ASTNode) node.getPayload())) {
+            return visit((ASTNode) node.getChild(0));
+        }
+        return visit((ASTNode) node.getChild(1));
     }
 }
