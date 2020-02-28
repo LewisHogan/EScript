@@ -159,6 +159,20 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
         return String.format("%s = %s", visit((ASTNode) node.getChild(0)), visit((ASTNode) node.getChild(1)));
     }
 
+    /**
+     * Checks if any nodes in the tree are StringNode
+     *
+     * @param node The root of the tree to check
+     * @return If the node is or contains a StringNode
+     */
+    private boolean containsString(ASTNode node) {
+        for (int i = 0; i < node.getChildCount(); i++) {
+            if (containsString((ASTNode) node.getChild(i))) return true;
+        }
+
+        return node instanceof StringNode;
+    }
+
     @Override
     protected String visitExpression(ExpressionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         String expressionSymbol = "";
@@ -171,10 +185,10 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
             case ADD:
                 expressionSymbol = "+";
                 // In python you cannot just add an two non string types for concatenation
-                if ((left instanceof StringNode || left instanceof ExpressionNode) && !(right instanceof StringNode)) {
+                if ((containsString(left)) && !containsString(right)) {
                     rightStr = String.format("str(%s)", rightStr);
                 }
-                if (!(left instanceof StringNode) && (right instanceof StringNode || right instanceof ExpressionNode))
+                if (!containsString(left) && (containsString(right)))
                     leftStr = String.format("str(%s)", leftStr);
                 break;
             case POWER:
@@ -277,7 +291,7 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
     @Override
     protected String visitFunctionDefinitionNode(FunctionDefinitionNode node) throws InvalidOperationException, UndefinedVariableException, InvalidIDException {
         FunctionDefinitionPayload payload = (FunctionDefinitionPayload) node.getPayload();
-        String header =  String.format("def %s(%s):\n", payload.getFunctionName(),
+        String header = String.format("def %s(%s):\n", payload.getFunctionName(),
                 payload.getParameters().stream().map(ASTNode::toString).collect(Collectors.joining(", ")));
 
         String body = "";
@@ -298,7 +312,7 @@ public class PythonCompilerVisitor extends ASTVisitor<String> {
         String args = "";
         for (int i = 0; i < node.getChildCount(); i++) {
             ASTNode child = (ASTNode) node.getChild(i);
-            args += visit(child) + ((i != node.getChildCount()-1) ? ", " : "");
+            args += visit(child) + ((i != node.getChildCount() - 1) ? ", " : "");
         }
         return String.format("%s(%s)", node.getPayload(), args);
     }
