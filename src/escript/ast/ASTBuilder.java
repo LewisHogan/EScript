@@ -231,8 +231,8 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     }
 
     @Override
-    public ConditionNode visitConditionParenthesis(escriptParser.ConditionParenthesisContext ctx) {
-        return (ConditionNode) visit(ctx.condition());
+    public ASTNode visitConditionParenthesis(escriptParser.ConditionParenthesisContext ctx) {
+        return visit(ctx.condition());
     }
 
     @Override
