@@ -17,7 +17,8 @@ statement
 	| FUNCTION ID LPAREN (ID (SEP ID)*)? RPAREN LBRACE statement* RBRACE #StatementFunctionDeclaration
 	| FUNCTION ID LPAREN (ID (SEP ID)*)? RPAREN statement #StatementFunctionDeclaration
 	| RETURN condition EOS #StatementReturn
-	| condition EOS #StatementCondition; // Allows conditions (and expressions) to be evaluated without assigning them.
+	| condition EOS #StatementCondition // Allows conditions (and expressions) to be evaluated without assigning them.
+	| EOS #StatementEOS;
 
 // A condition is something that can ultimately evaluate to either TRUE or FALSE.
 // This includes conditions which return sub conditions.

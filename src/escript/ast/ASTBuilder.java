@@ -20,6 +20,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +65,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitStart(escriptParser.StartContext ctx) {
         return new StartNode(
-                ctx.statement().stream().map(this::visit).map(n -> (ASTNode) n).collect(Collectors.toList())
+                ctx.statement().stream().map(this::visit).filter(Objects::nonNull).map(n -> (ASTNode) n).collect(Collectors.toList())
         );
     }
 
@@ -72,7 +73,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
     public ASTNode visitStatementBlock(escriptParser.StatementBlockContext ctx) {
         if (ctx.statement().size() == 1) return visit(ctx.statement(0));
         // As we return a List<ASTNode> here, rather than a ASTNode, we cannot use escriptBaseVisitor<ASTNode>
-        return new BlockNode(ctx.statement().stream().map(this::visit).collect(Collectors.toList()));
+        return new BlockNode(ctx.statement().stream().map(this::visit).filter(Objects::nonNull).collect(Collectors.toList()));
     }
 
     @Override
@@ -90,6 +91,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
      */
     private List ensureList(Object nodes) {
         // This is needed b
+        if (nodes == null) return new ArrayList();
         if (nodes instanceof List) return (List) nodes;
         return Arrays.asList(nodes);
     }
@@ -378,7 +380,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
         return new FunctionDefinitionNode(
                 ctx.ID(0).getText(),
                 args,
-                ctx.statement().stream().map(this::visit).collect(Collectors.toList())
+                ctx.statement().stream().map(this::visit).filter(Objects::nonNull).collect(Collectors.toList())
         );
     }
 
@@ -391,7 +393,7 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitExpressionFunctionCall(escriptParser.ExpressionFunctionCallContext ctx) {
-        List<ASTNode> parameters = ctx.condition().stream().map(this::visit).collect(Collectors.toList());
+        List<ASTNode> parameters = ctx.condition().stream().map(this::visit).filter(Objects::nonNull).collect(Collectors.toList());
 
         return new FunctionCallNode(
                 ctx.ID().getText(),
@@ -405,5 +407,10 @@ public class ASTBuilder extends escriptBaseVisitor<ASTNode> {
         ASTNode ifTrue = visit(ctx.mid);
         ASTNode ifFalse = visit(ctx.right);
         return new TernaryNode(condition, ifTrue, ifFalse);
+    }
+
+    @Override
+    public ASTNode visitStatementEOS(escriptParser.StatementEOSContext ctx) {
+        return null;
     }
 }
